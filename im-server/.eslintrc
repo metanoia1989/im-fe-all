@@ -1,0 +1,9 @@
+{
+  "extends": ["eslint-config-egg", "prettier"],
+  "rules": {
+    "comma-dangle": [2, "never"],
+    "strict": [0],
+    "object-shorthand": "off",
+    "array-bracket-spacing": "off"
+  }
+}

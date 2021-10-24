@@ -1,0 +1,71 @@
+{
+  "name": "im-server",
+  "version": "1.0.0",
+  "description": "im",
+  "private": true,
+  "egg": {
+    "declarations": true
+  },
+  "scripts": {
+    "start": "egg-scripts start --daemon --title=egg-server-im-server --sticky",
+    "stop": "egg-scripts stop --title=egg-server-im-server",
+    "dev": "egg-bin dev --sticky",
+    "debug": "egg-bin debug",
+    "test": "npm run lint -- --fix && npm run test-local",
+    "test-local": "egg-bin test",
+    "cov": "egg-bin cov",
+    "lint": "eslint .",
+    "ci": "npm run lint && npm run cov",
+    "autod": "autod",
+    "cz": "git-cz"
+  },
+  "dependencies": {
+    "axios": "^0.19.2",
+    "egg": "^2.26.0",
+    "egg-bin": "^4.14.1",
+    "egg-passport": "^2.1.1",
+    "egg-passport-github": "^1.0.0",
+    "egg-redis": "^2.4.0",
+    "egg-scripts": "^2.13.0",
+    "egg-sequelize": "^5.2.1",
+    "egg-socket.io": "^4.1.6",
+    "egg-validate": "^2.0.2",
+    "mysql2": "^2.1.0",
+    "nodemailer": "^6.4.5"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^8.2.0",
+    "@commitlint/config-conventional": "^8.2.0",
+    "autod": "^3.1.0",
+    "autod-egg": "^1.1.0",
+    "commitizen": "^4.0.3",
+    "cz-conventional-changelog": "^3.0.2",
+    "egg-ci": "^1.13.0",
+    "egg-mock": "^3.23.2",
+    "eslint": "^5.13.0",
+    "eslint-config-egg": "^7.5.1",
+    "husky": "^3.0.9"
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-conventional-changelog"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -e $HUSKY_GIT_PARAMS"
+    }
+  },
+  "engines": {
+    "node": ">=10.0.0"
+  },
+  "ci": {
+    "version": "10"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": "hezf",
+  "license": "MIT"
+}

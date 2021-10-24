@@ -1,0 +1,55 @@
+{
+  "name": "im-fe-client",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "cz": "git-cz"
+  },
+  "dependencies": {
+    "@better-scroll/observe-dom": "^2.0.0-beta.10",
+    "@better-scroll/pull-down": "^2.0.0-beta.10",
+    "core-js": "^3.6.5",
+    "vue-cropper": "^0.5.4"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^8.2.0",
+    "@commitlint/config-conventional": "^8.2.0",
+    "@vue/cli-plugin-babel": "^4.4.6",
+    "@vue/cli-plugin-eslint": "^4.4.6",
+    "@vue/cli-plugin-router": "^4.4.6",
+    "@vue/cli-plugin-vuex": "^4.4.6",
+    "@vue/cli-service": "^4.4.6",
+    "@vue/eslint-config-standard": "^5.1.2",
+    "babel-eslint": "^10.0.3",
+    "commitizen": "^4.0.3",
+    "cz-conventional-changelog": "^3.0.2",
+    "eslint": "^6.7.2",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "eslint-plugin-vue": "^6.1.2",
+    "husky": "^3.0.9",
+    "sass": "^1.25.0",
+    "sass-loader": "^8.0.2",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -e $HUSKY_GIT_PARAMS"
+    }
+  },
+  "license": "MIT",
+  "browserslist": [
+    "> 1%",
+    "last 2 versions"
+  ]
+}

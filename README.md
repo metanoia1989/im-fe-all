@@ -5,6 +5,11 @@
 * im-server https://github.com/hezhongfeng/im-server      
 * im-fe-admin https://github.com/hezhongfeng/im-fe-admin      
 
+im-uniapp 客户端：  
+* 使用[uniapp-scaffold](https://github.com/mukuashi/uniapp-scaffold)脚手架        
+* 使用[uni-nvue-chat](https://github.com/wzJun1/uni-nvue-chat)进行二开
+* 参考学习[阿里ChatUI](https://chatui.io/)设计规范
+
 为什么使用开源IM而不是自己开发，因为对IM整个技术栈不熟悉，从零开始我搞不定，也没有这样充足的时间。  
 先把这个用上了，再来考虑接下来的。二次开发需要的精力和技术远远小于从零开始。    
 

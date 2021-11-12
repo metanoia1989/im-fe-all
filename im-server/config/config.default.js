@@ -30,7 +30,7 @@ module.exports = appInfo => {
     port: 3306,
     database: 'im_db',
     username: 'root',
-    password: 'root1234',
+    password: 'root',
     dialectOptions: {
       dateStrings: true,
       typeCast: true

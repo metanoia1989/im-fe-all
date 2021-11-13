@@ -6,7 +6,23 @@
  * @Last Modified by: mukuashi
  * @Last Modified time: 2021-04-13 01:21:55
  */
+
+const TransfromPages = require('uni-read-pages');
+const TFPages = new TransfromPages({
+  include: ['path', 'style', 'meta']
+});
+
 module.exports = {
+  productionSourceMap: false, // 生成环境不打包map文件
+  configureWebpack: config => {
+    return {
+      plugins: [
+        new TFPages.webpack.DefinePlugin({
+          ROUTES: JSON.stringify(TFPages.routes)
+        })
+      ]
+    }
+  },
   // 发布时删除console
   chainWebpack: (config) => {
     // 发行或运行时启用了压缩时会生效

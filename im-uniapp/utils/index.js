@@ -493,11 +493,28 @@ export function getRandomItem(arr) {
 /**
  * 2021-03-15
  * @desc 16进制颜色值转rgba值，支持透明度配置
- * @param {*} hex 
- * @param {*} opacity 
+ * @param {*} hex
+ * @param {*} opacity
  * @returns rgba
  * @author mukuashi@icloud.com
  */
 export function getHexToRgba(hex, opacity) {
   return 'rgba(' + parseInt('0x' + hex.slice(1, 3)) + ',' + parseInt('0x' + hex.slice(3, 5)) + ',' + parseInt('0x' + hex.slice(5, 7)) + ',' + opacity + ')'
+}
+
+
+/**
+ * 生成随机字符串
+ * @param {integer} length 随机字符串长度
+ * @returns random str
+ */
+export function makeid(length) {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+      result += characters.charAt(Math.floor(Math.random() *
+ charactersLength));
+   }
+   return result;
 }

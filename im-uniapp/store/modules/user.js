@@ -2,7 +2,7 @@ import WebSocket from '@/common/common.js';
 import Utils from '@/common/utils.js';
 export default {
 	state: {
-		url:'ws://127.0.0.1:32255',
+		url:'ws://127.0.0.1:7001',
 		user: false,
 		systemInfo:[],
 		webSocket: null,
@@ -29,16 +29,13 @@ export default {
 	},
 	actions: {
 		// 登录后处理
-		login({
-			state,
-			dispatch
-		}, res) {
+		login({ state, dispatch }, res) {
 			// 存到状态中
 			state.user = res
 			state.user_token = uni.getStorageSync('token');
 			// 存储到本地存储中
 			uni.setStorageSync('user', res)
-			uni.setStorageSync('uid', res._id)
+			uni.setStorageSync('uid', res.id)
 			// 连接socket
 			state.webSocket = new WebSocket({
 				url: state.url
@@ -49,7 +46,7 @@ export default {
 			// 获取好友申请列表
 			dispatch('getFriendApply')
 			// 获取好友列表
-			dispatch('getFriendIds') 
+			dispatch('getFriendIds')
 			// 获取群组列表
 			dispatch('getGroupIds')
 			// 初始化总未读数角标
@@ -83,14 +80,14 @@ export default {
 			}).then((res) => {
 				dispatch('updateUser',res.result.data[0])
 			}).catch((err) => {
-				 
-			}); 
+
+			});
 		},
 		logout({
 			state,
 			dispatch
 		}) {
-			 
+
 			dispatch('closeWebSocket')
 			state.webSocket.logout()
 			state.user = false
@@ -129,7 +126,7 @@ export default {
 				//state.friendIds = uni.setStorageSync('friendIds') ? uni.getStorageSync('friendIds') : [];
 				// 连接socket
 				state.webSocket = new WebSocket({
-					url: state.url 
+					url: state.url
 				})
 				state.utils = new Utils()
 				// 获取会话列表
@@ -143,15 +140,15 @@ export default {
 				// 初始化总未读数角标
 				dispatch('updateBadge')
 				state.webSocket.checkToken();
-			}  
+			}
 		},
-		
+
 		closeWebSocket({state}){
 			if(state.webSocket){
 				state.webSocket.close();
 			}
 		},
-		
+
 		// 获取会话列表
 		getSessionList({
 			state
@@ -162,7 +159,7 @@ export default {
 				state.sessionList = list
 			})
 		},
- 
+
 		// 获取申请列表
 		getFriendApply({
 			state
@@ -177,7 +174,7 @@ export default {
 		getFriendIds({
 			state,
 			dispatch
-		}) { 
+		}) {
 			//uni.showLoading();
 			uniCloud.callFunction({
 				name: 'user',
@@ -197,7 +194,7 @@ export default {
 		getFriendListByIds({
 			state,
 			dispatch
-			
+
 		}, res) {
 			if(state.webSocket.checkResultData(res)){
 				state.friendIds = res.result.data;
@@ -246,7 +243,7 @@ export default {
 				uni.hideLoading();
 			}
 		},
-		
+
 		getGroupIds({
 			state,
 			dispatch
@@ -266,15 +263,15 @@ export default {
 				},
 			}).then((res) => {
 				 if(res.result.data){
-				
+
 					uni.setStorageSync('groupList', res.result.data)
 				 	state.groupList = res.result.data
 				 }
-			}).catch((err) => { 
+			}).catch((err) => {
 				console.log(err);
 			})
 		},
-		
+
 		// 初始化总未读数角标
 		updateBadge({state}){
 			// 开启监听总未读数变化

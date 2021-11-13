@@ -19,6 +19,7 @@ export default {
     return responseHandle(response);
   },
   async post(url, params = {}) {
+    console.log('触发了url是多少呢？', url);
     const response = await axios.post(url, params);
     return responseHandle(response);
   },

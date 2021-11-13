@@ -8,7 +8,7 @@
 			</view>
 			<image @click="onChooseImage()" class="upload-image-box" v-else :src="avatar" mode="aspectFill"></image>
 		</view>
-		<view class="uni-common-mt"> 
+		<view class="uni-common-mt">
 			<view class="uni-form-item uni-column">
 				<view class="" style="padding-left: 26rpx;"><text class="uni-form-item__title">国家/地区</text></view>
 				<view class="uni-input-wrapper">
@@ -42,7 +42,7 @@
 				<view class="service-text-box">
 					<text class="service-text">勾选代表同意本软件的</text><text @click="serviceBox" class="service-text" style="color: #2979FF;">版权协议及服务协议</text>
 				</view>
-			</view> 
+			</view>
 		</view>
 		<view class="button" @click="submit()">
 			<view class="submit" @click="submit()">
@@ -166,8 +166,8 @@
 						duration: 2000
 					})
 					return;
-				} 
-				
+				}
+
 				if (!this.service) {
 					uni.showToast({
 						title: "请阅读服务协议并确认勾选",
@@ -176,45 +176,29 @@
 					})
 					return;
 				}
-				
+
 				if(this.isSubmit){return;}
-				
+
 				this.isSubmit = true;
 				uni.showLoading({
 					title: '注册中...'
 				})
 				var that = this;
-				uniCloud.callFunction({
-					name: 'login',
-					data: {
-						$url: "regist",
-						data: {
-							nickname: that.nickname,
-							username: that.username,
-							password: that.password,
-							avatar: that.avatar
-						}
-					}
+        this.$api.post(this.$urls.login.signup, {
+          nickname: that.nickname,
+          username: that.username,
+          password: that.password,
+          avatar: that.avatar
 				}).then((res) => {
-					uni.hideLoading() 
-					console.log(res)
-					if (res.result.code == 0) {
-						 
-						uni.showToast({
-							title: '注册成功',
-							icon: 'none',
-							duration: 2000,
-							success() {
-								uni.redirectTo({url: './login'})
-							},
-						})
-					} else {
-						uni.showToast({
-							title: res.result.msg,
-							icon: 'none',
-							duration: 2000
-						})
-					}
+					uni.hideLoading()
+          uni.showToast({
+            title: '注册成功',
+            icon: 'none',
+            duration: 2000,
+            success() {
+              uni.redirectTo({url: './login'})
+            },
+          })
 				}).catch((err) => {
 					uni.hideLoading()
 					uni.showToast({
@@ -224,31 +208,6 @@
 					})
 					console.error(err)
 				})
-				 
-			},
-			getUserInfo: function(uid) {
-				uniCloud.callFunction({
-					name: 'user',
-					data: {
-						$url: "getUserByUid",
-						data: {
-							uid: uid
-						}
-					},
-				}).then((res) => {
-					uni.hideLoading()
-					this.$store.dispatch('login', res.result.data[0])
-					uni.switchTab({
-						url: '../tabbar/session'
-					})
-				}).catch((err) => {
-					uni.hideLoading()
-					uni.showToast({
-						title: err.message,
-						icon: 'none',
-						duration: 2000
-					})
-				});
 			},
 			regist: function() {
 				uni.navigateTo({
@@ -410,7 +369,7 @@
 		justify-content: center;
 		align-items: center;
 		text-align: center;
-	} 
+	}
 	.service-text {
 		font-size: 28rpx;
 	}

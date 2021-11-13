@@ -18,7 +18,10 @@
 					"bounce": "none",
 					"background": "#ffffff"
 				}
-			}
+			},
+      "meta": {
+        "auth": false
+      }
 		},
 		{
 			"path": "pages/index/login",
@@ -30,7 +33,10 @@
 				"app-plus": {
 					"bounce": "none"
 				}
-			}
+			},
+      "meta": {
+        "auth": false
+      }
 		},
 		{
 			"path": "pages/tabbar/my",
@@ -39,7 +45,10 @@
 				"backgroundColor": "#ededed",
 				"navigationBarTitleText": "",
 				"disableScroll": true
-			}
+			},
+      "meta": {
+        "auth": true
+      }
 		},
 		{
 			"path": "pages/contact/card",
@@ -51,7 +60,10 @@
 					"titleNView": false,
 					"bounce": "none"
 				}
-			}
+			},
+      "meta": {
+        "auth": true
+      }
 		},
 		{
 			"path": "pages/contact/queryUsers",
@@ -65,7 +77,10 @@
 					"titleNView": false,
 					"bounce": "none"
 				}
-			}
+			},
+      "meta": {
+        "auth": true
+      }
 		},
 		{
 			"path": "pages/contact/more",
@@ -79,7 +94,10 @@
 				"app-plus": {
 					"titleNView": false
 				}
-			}
+			},
+      "meta": {
+        "auth": true
+      }
 		},
 		{
 			"path": "pages/contact/form",
@@ -95,7 +113,10 @@
 					"animationType": "slide-in-bottom",
 					"animationDuration": 300
 				}
-			}
+			},
+      "meta": {
+        "auth": true
+      }
 		},
 		{
 			"path": "pages/chat/chat",
@@ -110,7 +131,10 @@
 					"animationDuration": 300,
 					"titleNView": false
 				}
-			}
+			},
+      "meta": {
+        "auth": true
+      }
 		},
 		{
 			"path": "pages/group/chatGroup",
@@ -125,7 +149,10 @@
 					"animationDuration": 300,
 					"titleNView": false
 				}
-			}
+			},
+      "meta": {
+        "auth": true
+      }
 		},
 		{
 			"path": "pages/group/groupInfo",
@@ -138,7 +165,10 @@
 				"app-plus": {
 					"titleNView": false
 				}
-			}
+			},
+      "meta": {
+        "auth": true
+      }
 		},
 		{
 			"path": "pages/group/form",
@@ -153,7 +183,10 @@
 					"animationType": "slide-in-bottom",
 					"animationDuration": 300
 				}
-			}
+			},
+      "meta": {
+        "auth": true
+      }
 		},
 		{
 			"path": "pages/index/regist",
@@ -165,7 +198,10 @@
 				"app-plus": {
 					"bounce": "none"
 				}
-			}
+			},
+      "meta": {
+        "auth": false
+      }
 		},
 		{
 			"path": "pages/tabbar/contact",
@@ -179,7 +215,10 @@
 					"titleNView": false,
 					"bounce": "none"
 				}
-			}
+			},
+      "meta": {
+        "auth": true
+      }
 		}, {
 			"path": "pages/contact/applyList",
 			"style": {
@@ -194,7 +233,10 @@
 					"titleNView": false,
 					"bounce": "none"
 				}
-			}
+			},
+      "meta": {
+        "auth": true
+      }
 		}, {
 			"path": "pages/group/createGroup",
 			"style": {
@@ -209,7 +251,10 @@
 					"animationType": "slide-in-bottom",
 					"animationDuration": 300
 				}
-			}
+			},
+      "meta": {
+        "auth": true
+      }
 		}, {
 			"path": "pages/contact/groupList",
 			"style": {
@@ -223,7 +268,10 @@
 					"titleNView": false,
 					"bounce": "none"
 				}
-			}
+			},
+      "meta": {
+        "auth": true
+      }
 		}, {
 			"path": "pages/user/user",
 			"style": {
@@ -237,7 +285,10 @@
 						"titleSize": "34rpx"
 					}
 				}
-			}
+			},
+      "meta": {
+        "auth": true
+      }
 		}, {
 			"path": "pages/user/form",
 			"style": {
@@ -250,7 +301,10 @@
 					"animationType": "slide-in-bottom",
 					"animationDuration": 300
 				}
-			}
+			},
+      "meta": {
+        "auth": true
+      }
 		}, {
 			"path": "pages/extend/webview",
 			"style": {
@@ -263,7 +317,10 @@
 					"titleNView": false,
 					"bounce": "none"
 				}
-			}
+			},
+      "meta": {
+        "auth": true
+      }
 		}, {
 			"path": "pages/group/invitation",
 			"style": {
@@ -278,7 +335,10 @@
 					"animationType": "slide-in-bottom",
 					"animationDuration": 300
 				}
-			}
+			},
+      "meta": {
+        "auth": true
+      }
 		}
 	],
 	"globalStyle": {

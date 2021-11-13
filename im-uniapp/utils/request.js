@@ -13,106 +13,118 @@ import storage from './storage';
 import queryString from 'query-string';
 import { getCommonReqParam, safeJsonStringInBrowser } from './index';
 
-export default {
-  request(options) {
-    // 默认request配置
-    const config = {
-      data: {},
-      method: 'GET',
-      dataType: 'json' /* 如设为json，会对返回的数据做一次 JSON.parse */,
-      responseType: 'text',
-      timeout: 6000, // 超时时间
-      success() {},
-      fail() {},
-      complete() {},
-    };
-    // 拦截器相关
-    const interceptor = {
-      request: null,
-      response: null,
-    };
-    if (!options) options = {};
-    if (!options?.header) options.header = {};
-    // 自定义小程序请求auth info
-    const openid = storage.get('openid', true);
-    const unionid = storage.get('unionid', true);
-    if (openid) options.header.openid = openid;
-    if (unionid) options.header.unionid = unionid;
-    // #ifdef MP
-    options.header['x-app-platform'] = 'wechatapp';
-    // #endif
-    options = {
-      ...config,
-      ...options,
-      url: options.baseUrl
-        ? options.baseUrl + (options.url || '')
-        : app.hosts[options.hostKey || 'api'] + (options.url || ''),
-    };
-    // md5(景区部门默认)
-    if (options.md5) {
-      const encrypt = queryString.stringify({
-        ...getCommonReqParam(),
-      }, {
-        skipNull: true,
-      });
-      if (options.method.toLowerCase() === 'post') {
-        options.url = `${options.url}&${encrypt}`;
-      } else {
-        options = {
-          ...options,
-          data: {
-            ...options.data,
-            ...getCommonReqParam(),
-          },
-        };
-      }
-    }
-    return new Promise((resolve, reject) => {
-      // 响应相关
-      options.complete = (res) => {
-        // 特殊返回结果出处理
-        if (typeof res === 'object') {
-          res = JSON.stringify(res);
-          res = JSON.parse(safeJsonStringInBrowser(res, true));
-        }
-        res.config = options;
-        // data || status
-        const errToast = (info = {}) => {
-          uni.showToast({
-            title: (info?.data && (info.data.error || info.data.message || info.data.errMsg || info.data.text)) || '服务器开小差了 ～',
-            icon: 'none',
-          });
-        };
-        if (/20\d$/.test(String(res.statusCode))) {
-          // 兼容部分接口返回data为空的情况
-          resolve({ ...res.data, ok: true });
-        } else {
-          // 未登录或未签约等情况
-          if (!options.hideToast) errToast(res.data);
-          reject(res.data);
-        }
-        // 拦截response
-        if (interceptor.response) {
-          const newResponse = interceptor.response(res);
-          if (newResponse) {
-            res = newResponse;
-          }
-        }
-        // 统一的响应日志记录
-        _reslog(res);
-      };
-      options.fail = () => {};
-      options.requestId = new Date().getTime();
-      if (interceptor.request) {
-        interceptor.request(options);
-      }
-      // 统一的请求日志记录
-      _reqlog(options);
-      //
-      uni.request(options);
-    }).catch((err) => {
-      console.log(err);
+export function request(options) {
+  // 默认request配置
+  const config = {
+    data: {},
+    method: 'GET',
+    dataType: 'json' /* 如设为json，会对返回的数据做一次 JSON.parse */,
+    responseType: 'text',
+    timeout: 6000, // 超时时间
+    success() {},
+    fail() {},
+    complete() {},
+  };
+  // 拦截器相关
+  const interceptor = {
+    request: null,
+    response: null,
+  };
+  if (!options) options = {};
+  if (!options?.header) options.header = {};
+  // 自定义小程序请求auth info
+  const openid = storage.get('openid', true);
+  const unionid = storage.get('unionid', true);
+  if (openid) options.header.openid = openid;
+  if (unionid) options.header.unionid = unionid;
+  // #ifdef MP
+  options.header['x-app-platform'] = 'wechatapp';
+  // #endif
+  options = {
+    ...config,
+    ...options,
+    url: options.baseUrl
+      ? options.baseUrl + (options.url || '')
+      : app.hosts[options.hostKey || 'api'] + (options.url || ''),
+  };
+  // md5(景区部门默认)
+  if (options.md5) {
+    const encrypt = queryString.stringify({
+      ...getCommonReqParam(),
+    }, {
+      skipNull: true,
     });
+    if (options.method.toLowerCase() === 'post') {
+      options.url = `${options.url}&${encrypt}`;
+    } else {
+      options = {
+        ...options,
+        data: {
+          ...options.data,
+          ...getCommonReqParam(),
+        },
+      };
+    }
+  }
+  return new Promise((resolve, reject) => {
+    // 响应相关
+    options.complete = (res) => {
+      // 特殊返回结果出处理
+      if (typeof res === 'object') {
+        res = JSON.stringify(res);
+        res = JSON.parse(safeJsonStringInBrowser(res, true));
+      }
+      res.config = options;
+      // data || status
+      const errToast = (info = {}) => {
+        uni.showToast({
+          title: (info?.data && (info.data.errorMessage || info.data.error || info.data.message || info.data.errMsg || info.data.text)) || '服务器开小差了 ～',
+          icon: 'none',
+        });
+      };
+      if (/20\d$/.test(String(res.statusCode)) && res.data.statusCode == 0) {
+        // 兼容部分接口返回data为空的情况
+        let data = res.data.data || []
+        resolve({ data, ok: true });
+      } else {
+        // 未登录或未签约等情况
+        if (!options.hideToast) errToast(res);
+        reject(res.data);
+      }
+      // 拦截response
+      if (interceptor.response) {
+        const newResponse = interceptor.response(res);
+        if (newResponse) {
+          res = newResponse;
+        }
+      }
+      // 统一的响应日志记录
+      _reslog(res);
+    };
+    options.fail = () => {};
+    options.requestId = new Date().getTime();
+    if (interceptor.request) {
+      interceptor.request(options);
+    }
+    // 统一的请求日志记录
+    _reqlog(options);
+    //
+    uni.request(options);
+  });
+};
+
+export default {
+  get(url, params = {}) {
+    return request({ url, data: params, method: 'GET' })
+  },
+  post(url, params = {}) {
+    return request({ url, data: params, method: 'POST' })
+  },
+  put(url, params = {}) {
+    return request({ url, data: params, method: 'PUT' })
+  },
+  delete(url, params = {}) {
+    return request({ url, data: params, method: 'DELETE' })
   },
 };
 /**

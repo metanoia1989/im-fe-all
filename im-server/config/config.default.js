@@ -84,6 +84,15 @@ module.exports = appInfo => {
     skill_ids: ['']
   };
 
+  config.jwt = {
+    secret: 'IximeHkamV41KeuHd6QQqD7DNgy6pW39', // 自定义token加密条件字符串
+  }
+
+  config.cors = {
+    origin: '*',
+    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH'
+  }
+
   return {
     ...config
   };

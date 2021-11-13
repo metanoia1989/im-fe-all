@@ -11,10 +11,9 @@
 import verses from "./verses";
 
 const domain = {
-  api: "http://api.kquanr.com", // 通用api
-  sinaimg: "https://lz.sinaimg.cn", // 新浪微博、绿洲
-  mepai: "https://api.mepai.me",
-  _500px: "https://500px.com.cn",
+  api: "http://127.0.0.1:7001", // 通用api
+  im: "127.0.0.1:7001", // websocket
+
   lbs: 'https://apis.map.qq.com',
   weather: 'https://wis.qq.com',
   cloud: {

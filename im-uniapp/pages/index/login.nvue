@@ -69,62 +69,16 @@
 				uni.showLoading({
 					title: '登录中...'
 				})
-				uniCloud.callFunction({
-					name: 'login',
-					data: {
-						$url: "login",
-						token: this.$store.state.user.user_token,
-						data: {
-							username: this.username,
-							password: this.password
-						}
-					},
+        this.$api.post(this.$urls.login.login, {
+          username: this.username,
+          password: this.password
 				}).then((res) => {
-					console.log(res)
-					if (res.result.code == 0) {
-						uni.setStorageSync("token",res.result.token);
-						this.getUserInfo(res.result.uid,res.result.token);
-					} else { 
-						uni.hideLoading()
-						uni.showToast({
-							title: res.result.msg,
-							icon: 'none',
-							duration: 2000
-						})
-					}
-				}).catch((err) => {
-					uni.hideLoading()
-					uni.showToast({
-						title: err.message,
-						icon: 'none',
-						duration: 2000
-					})
+          uni.setStorageSync("token",res.data.token);
+          this.$store.dispatch('login', res.data.userInfo)
+          uni.switchTab({
+            url: '../tabbar/session'
+          })
 				})
-			},
-			getUserInfo: function(uid,token) {
-				uniCloud.callFunction({
-					name: 'user',
-					data: {
-						$url: "getUserByUid",
-						token:token,
-						data: {
-							uid: uid
-						}
-					},
-				}).then((res) => {
-					uni.hideLoading()
-					this.$store.dispatch('login', res.result.data[0])
-					uni.switchTab({
-						url: '../tabbar/session'
-					})
-				}).catch((err) => {
-					uni.hideLoading()
-					uni.showToast({
-						title: err.message,
-						icon: 'none',
-						duration: 2000
-					})
-				});
 			},
 			regist: function() {
 				uni.navigateTo({
@@ -147,7 +101,7 @@
 </script>
 
 <style scoped lang="scss">
-	
+
 	.nvue-page-root {
 		background-color: #fffffe;
 		padding-bottom: 40rpx;

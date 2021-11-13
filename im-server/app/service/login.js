@@ -60,7 +60,7 @@ class LoginService extends Service {
   }
 
   async login({ provider, username, password }) {
-    const { ctx, config, service } = this;
+    const { ctx, config, service, app } = this;
 
     if (provider === 'local') {
       const secret = config.userConfig.secret;
@@ -90,11 +90,12 @@ class LoginService extends Service {
         return;
       }
 
-      ctx.session.user = {
+      const token = app.jwt.sign({
         id: user.id,
         roles,
-        rights
-      };
+        rights,
+        userInfo,
+      }, config.jwt.secret)
 
       ctx.body = {
         statusCode: '0',
@@ -103,7 +104,8 @@ class LoginService extends Service {
           userInfo,
           rights,
           roles,
-          id: user.id
+          id: user.id,
+          token,
         }
       };
     }

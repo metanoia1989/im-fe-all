@@ -34,6 +34,7 @@ export default {
       click: true,
       observeDOM: true
     });
+    console.log('当前的会话消息数据', this.conversationList);
   },
   methods: {}
 };

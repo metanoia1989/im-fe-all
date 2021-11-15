@@ -20,12 +20,18 @@ const IoService = {
       query: {
         scene: 'im',
         userId: userId
-      }
+      },
+      transports: ['websocket'],
+      timeout: 5000
     });
 
     this.socket.on('connect', () => {
-      console.log('socket连接成功！');
+      console.log('socket连接成功，开始获取会话列表！');
       getConversationList();
+    });
+
+    this.socket.on('error', error => {
+      console.log('socket连接出错', error);
     });
 
     // 有新消息
@@ -34,6 +40,8 @@ const IoService = {
       message.shouldScroll = true;
       store.commit('im/newMessage', { message });
     });
+
+    console.log('getSocket end');
   },
   connect() {
     if (this.socket) {

@@ -60,7 +60,7 @@ class LoginController extends Controller {
 
   async logout() {
     const { ctx } = this;
-    ctx.session.user = null;
+    ctx.state.user = null;
 
     ctx.body = {
       statusCode: '0',
@@ -71,8 +71,8 @@ class LoginController extends Controller {
 
   async currentUser() {
     const { ctx, service } = this;
-    const user = await ctx.model.User.findByPk(ctx.session.user.id);
-    const object = await service.user.getUserAttribute(ctx.session.user.id);
+    const user = await ctx.model.User.findByPk(ctx.state.user.id);
+    const object = await service.user.getUserAttribute(ctx.state.user.id);
     ctx.body = {
       statusCode: '0',
       errorMessage: null,

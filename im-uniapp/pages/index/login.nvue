@@ -69,7 +69,7 @@
 				uni.showLoading({
 					title: '登录中...'
 				})
-        this.$api.post(this.$urls.login.login, {
+        this.$http.post(this.$urls.login.login, {
           username: this.username,
           password: this.password
 				}).then((res) => {

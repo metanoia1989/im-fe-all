@@ -1,8 +1,8 @@
 import http from '@/common/http';
-import io from 'socket.io-client';
+import io from '@hyoga/uni-socket.io';
 import store from '@/store';
 import urls from '@/common/urls';
-import config from '../../config/config';
+import config from '../../config/data';
 import robotHead from '@/assets/images/robot.png';
 
 // 处理消息体
@@ -16,11 +16,13 @@ const IoService = {
   scroll: null,
   async getSocket() {
     const userId = store.getters.userId;
-    this.socket = io(config.ioHost, {
+    this.socket = io(config.domain.io, {
       query: {
         scene: 'im',
         userId: userId
-      }
+      },
+      transports: ['websocket'],
+      timeout: 5000,
     });
 
     this.socket.on('connect', () => {

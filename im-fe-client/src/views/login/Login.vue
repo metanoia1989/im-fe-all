@@ -51,6 +51,7 @@ export default {
         })
         .then(data => {
           this.$toast.success('登录成功');
+          localStorage.setItem('token', data.token);
           this.updateUserId({
             userId: data.id
           });

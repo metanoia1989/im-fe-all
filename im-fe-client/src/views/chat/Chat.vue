@@ -36,11 +36,13 @@ export default {
   watch: {},
   created() {
     if (this.$checkLogin()) {
+      console.log('有调用吗？？？？');
       IoService.connect();
     }
   },
   beforeDestroy() {
-    IoService.disconnect();
+    console.log('销毁了啊');
+    // IoService.disconnect();
   },
   methods: {
     onAdd() {

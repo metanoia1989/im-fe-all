@@ -7,7 +7,7 @@ class ApplyController extends Controller {
 
     const result = await ctx.model.Apply.findAndCountAll({
       where: {
-        userId: ctx.session.user.id,
+        userId: ctx.state.user.id,
         hasHandled: false
       }
     });
@@ -69,7 +69,7 @@ class ApplyController extends Controller {
 
     if (type === 'user') {
       isExist = await ctx.service.friend.isFriend({
-        userId: ctx.session.user.id,
+        userId: ctx.state.user.id,
         friendId: toId
       });
       if (isExist) {
@@ -79,7 +79,7 @@ class ApplyController extends Controller {
     } else if (type === 'group') {
       const group = await ctx.model.Group.findByPk(toId);
       const users = await group.getUsers();
-      isExist = users.find(item => item.id === ctx.session.user.id);
+      isExist = users.find(item => item.id === ctx.state.user.id);
       if (isExist) {
         statusCode = '1';
         errorMessage = '你们已经是群中的一员了';
@@ -89,7 +89,7 @@ class ApplyController extends Controller {
     if (!isExist) {
       apply = await ctx.service.apply.create({
         type: type,
-        fromId: ctx.session.user.id,
+        fromId: ctx.state.user.id,
         toId: toId
       });
     }
@@ -113,7 +113,7 @@ class ApplyController extends Controller {
     if (!apply) {
       errorMessage = '参数错误';
     } else if (approval) {
-      if (apply.toId !== ctx.session.user.id) {
+      if (apply.toId !== ctx.state.user.id) {
         errorMessage = '无此权限';
         statusCode = '2';
       } else {
@@ -125,7 +125,7 @@ class ApplyController extends Controller {
           plain: true
         });
         data.target = {
-          id: ctx.session.user.id === friend.userId ? friend.friendId : friend.userId
+          id: ctx.state.user.id === friend.userId ? friend.friendId : friend.userId
         };
       }
     }
@@ -153,7 +153,7 @@ class ApplyController extends Controller {
       errorMessage = '参数错误';
     } else if (approval) {
       group = await ctx.model.Group.findByPk(apply.toId);
-      if (group.ownerId !== ctx.session.user.id) {
+      if (group.ownerId !== ctx.state.user.id) {
         errorMessage = '无此权限';
         statusCode = '2';
       } else {

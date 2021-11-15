@@ -33,6 +33,7 @@ export default new Vuex.Store({
   actions: {},
   modules: {
     auth,
-    user
+    user,
+    im
   },
 });

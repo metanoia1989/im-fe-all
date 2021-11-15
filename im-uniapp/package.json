@@ -65,6 +65,7 @@
     "@dcloudio/uni-quickapp-native": "^2.0.0-alpha-31820210331003",
     "@dcloudio/uni-quickapp-webview": "^2.0.0-alpha-31820210331003",
     "@dcloudio/uni-stat": "^2.0.0-alpha-31820210331003",
+    "@hyoga/uni-socket.io": "^1.0.0",
     "@vue/shared": "^3.0.7",
     "core-js": "^3.9.1",
     "flyio": "^0.6.2",

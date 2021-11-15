@@ -2,7 +2,7 @@ import Vue from 'vue';
 import App from './App';
 import store from './store';
 import mixins from './mixins';
-import api from './utils/request';
+import request from './utils/request';
 import storage from './utils/storage';
 import urls from './common/urls';
 import { router, RouterMount } from './router.js'
@@ -11,7 +11,7 @@ import Cache from './utils/cache'
 Vue.config.productionTip = false;
 
 // 全局挂载后使用
-Vue.prototype.$api = api;
+Vue.prototype.$http = request;
 Vue.prototype.$store = store;
 Vue.prototype.$storage = storage;
 Vue.prototype.$urls = urls;

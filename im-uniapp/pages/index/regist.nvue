@@ -184,7 +184,7 @@
 					title: '注册中...'
 				})
 				var that = this;
-        this.$api.post(this.$urls.login.signup, {
+        this.$http.post(this.$urls.login.signup, {
           nickname: that.nickname,
           username: that.username,
           password: that.password,

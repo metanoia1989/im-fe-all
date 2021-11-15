@@ -12,14 +12,14 @@ module.exports = (options, app) => {
     try {
        const decode = await app.jwt.verify(token, app.config.jwt.secret)
        ctx.state.user = decode
-       await next()
     } catch (error) {
       ctx.body = {
         statusCode: '1',
         errorMessage: '请登录',
-        data: null
+        data: ctx.headers
       };
       return;
     }
+    await next()
   };
 };

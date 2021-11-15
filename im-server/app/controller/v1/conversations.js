@@ -6,8 +6,8 @@ class ConversationController extends Controller {
     const { ctx } = this;
 
     // 注意这里需要经过两次查询
-    const user = await ctx.model.User.findByPk(ctx.session.user.id);
-    const friends = await ctx.service.friend.getFriends({ userId: ctx.session.user.id });
+    const user = await ctx.model.User.findByPk(ctx.state.user.id);
+    const friends = await ctx.service.friend.getFriends({ userId: ctx.state.user.id });
     const groups = await user.getGroups({
       where: {
         disabled: false

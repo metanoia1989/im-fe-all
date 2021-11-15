@@ -39,7 +39,7 @@ class LoginService extends Service {
       await role.save();
       const rights = await role.getRights();
       const roles = [role];
-      ctx.session.user = {
+      ctx.state.user = {
         id: user.id,
         roles,
         rights

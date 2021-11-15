@@ -33,8 +33,9 @@ module.exports = appInfo => {
     password: 'root',
     dialectOptions: {
       dateStrings: true,
-      typeCast: true
-    }
+      typeCast: true,
+    },
+    logging: false
   };
 
   config.security = {

@@ -43,7 +43,7 @@ module.exports = async (ctx, githubUser) => {
     return;
   }
 
-  ctx.session.user = {
+  ctx.state.user = {
     id: user.id,
     roles,
     rights

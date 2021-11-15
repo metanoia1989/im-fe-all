@@ -8,7 +8,8 @@ module.exports = (options, app) => {
       return
     }
 
-    const token = ctx.headers.authorization ? ctx.headers.authorization.substring(7) : '';
+    let token = ctx.headers.authorization ? ctx.headers.authorization.substring(7) : '';
+    if (!token && ctx.query.token) token = ctx.query.token;
     try {
        const decode = await app.jwt.verify(token, app.config.jwt.secret)
        ctx.state.user = decode

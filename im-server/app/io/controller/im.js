@@ -8,8 +8,10 @@ class DefaultController extends Controller {
       await ctx.service.im.robot(message);
       return;
     }
+
+    ctx.logger.warn("用户数据为", ctx.state)
     // 对用户发言的权限进行判断
-    if (!ctx.session.user.rights.some(right => right.keyName === 'speak')) {
+    if (!ctx.state.user.rights.some(right => right.keyName === 'speak')) {
       return;
     }
 

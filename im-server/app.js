@@ -55,7 +55,7 @@ class AppBootHook {
   async didReady() {
     // 应用已经启动完毕
     const ctx = await this.app.createAnonymousContext();
-    await ctx.service.startup.start();
+    // await ctx.service.startup.start();
     // ctx.service.baidu.getToken();
   }
 

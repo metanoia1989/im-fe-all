@@ -19,7 +19,8 @@ const IoService = {
     this.socket = io(config.ioHost, {
       query: {
         scene: 'im',
-        userId: userId
+        userId: userId,
+        token: localStorage.getItem('token')
       },
       transports: ['websocket'],
       timeout: 5000

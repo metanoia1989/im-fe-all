@@ -2,8 +2,10 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 
 import config from '@/config';
+import plugins from './plugins';
 import auth from './modules/auth'
 import user from './modules/user.js';
+import im from './modules/im.js';
 
 Vue.use(Vuex);
 
@@ -36,4 +38,5 @@ export default new Vuex.Store({
     user,
     im
   },
+  plugins: plugins,
 });

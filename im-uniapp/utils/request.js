@@ -12,6 +12,7 @@ import app from '@/config';
 import storage from './storage';
 import queryString from 'query-string';
 import { getCommonReqParam, safeJsonStringInBrowser } from './index';
+import store from '@/store';
 
 export function request(options) {
   // 默认request配置
@@ -47,6 +48,13 @@ export function request(options) {
       ? options.baseUrl + (options.url || '')
       : app.hosts[options.hostKey || 'api'] + (options.url || ''),
   };
+
+  // 设置请求token
+  const token = store.state.user.token;
+  if (token) {
+    options.header['authorization'] = `Bearer ${token}`;
+  }
+
   // md5(景区部门默认)
   if (options.md5) {
     const encrypt = queryString.stringify({
@@ -66,6 +74,7 @@ export function request(options) {
       };
     }
   }
+
   return new Promise((resolve, reject) => {
     // 响应相关
     options.complete = (res) => {

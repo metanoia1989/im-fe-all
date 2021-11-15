@@ -3,16 +3,16 @@
 		<view class="nvue-page-head" ref="pagehead" id="pagehead">
 			<view class="navbar" ref="navbar">
 				<!--  #ifndef  MP-WEIXIN -->
-				<uni-nav-bar :fixed="false" :status-bar="true" @clickRight="showMenu" :loading="!webSocket.loadFinish"
-				 :rightIconBool="true" right-icon="plus" :title="webSocket.loadFinish ? '聊天' : '加载中'"></uni-nav-bar>
+				<uni-nav-bar :fixed="false" :status-bar="true" @clickRight="showMenu" :loading="!loadFinish"
+				 :rightIconBool="true" right-icon="plus" :title="loadFinish ? '聊天' : '加载中'"></uni-nav-bar>
 				<!--  #endif -->
 				<!--  #ifdef  MP-WEIXIN -->
-				<uni-nav-bar :fixed="false" :leftIconBool="true" left-icon="plus" :status-bar="true" @clickLeft="showMenu" :loading="!webSocket.loadFinish"
-				 :rightIconBool="true" :title="webSocket.loadFinish ? '聊天' : '加载中'"></uni-nav-bar>
+				<uni-nav-bar :fixed="false" :leftIconBool="true" left-icon="plus" :status-bar="true" @clickLeft="showMenu" :loading="!loadFinish"
+				 :rightIconBool="true" :title="loadFinish ? '聊天' : '加载中'"></uni-nav-bar>
 				<!--  #endif -->
 			</view>
 			<view class="navbar" ref="searchbar">
-				<uni-search-bar class="navbar" @input="searchInput(friendList,groupList,$event)" :searchTranslateX="searchTranslateX"
+				<uni-search-bar class="navbar" @input="" :searchTranslateX="searchTranslateX"
 				 :radius="6" placeholder="搜索" @confirm="search" bgColor="white" @searchBarClick="searchBarClick" @cancel="searchBarCancel"></uni-search-bar>
 			</view>
 		</view>
@@ -44,7 +44,7 @@
 			</cell>
 			<!--  #endif -->
 		</uni-list>
-		
+
 		<view v-if="showSearch" class="nvue-page-search" ref="searchpanel" :style="'height: '+ searchBoxH +'rpx;background-color:#ededed;'">
 			<view class="search-label" v-if="friendSearchResult.length">
 				<text class="search-label-text">好友</text>
@@ -132,12 +132,10 @@
 		mixins: [searchAnimation],
 		computed: {
 			...mapState({
-				user: state => state.user.user,
-				webSocket: state => state.user.webSocket,
-				sessionList: state => state.user.sessionList,
-				friendList: state => state.user.friendList,
-				groupList: state => state.user.groupList,
-			})
+				user: state => state.user.userInfo,
+				sessionList: state => state.im.conversationList,
+				loadFinish: state => state.im.loadFinish,
+			}),
 		},
 		watch: {
 			sessionList() {
@@ -171,6 +169,7 @@
 		},
 		methods: {
 			scanQrcode: function() {
+        return
 				this.menu = false;
 				var that = this;
 				try {
@@ -345,7 +344,7 @@
 		top: 180rpx;
 		right: 20rpx;
 		/*  #endif  */
-		
+
 		/*  #ifdef  MP-WEIXIN  */
 		top: 160rpx;
 		left: 20rpx;

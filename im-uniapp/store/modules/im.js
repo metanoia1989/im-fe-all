@@ -1,7 +1,8 @@
-import robotHead from '@/assets/images/robot.png';
+import robotHead from '@/static/images/robot.png';
 
 const state = {
   conversationList: [],
+  loadFinish: false,
   userInfoList: [
     {
       userId: 'robot',
@@ -98,6 +99,9 @@ const mutations = {
   },
   increaseConversationPageNumber(state, { conversationId }) {
     state.conversationList.find(conversation => conversation.id === conversationId).pageNumber++;
+  },
+  toggleLoad(state, status) {
+    state.loadFinish = status
   }
 };
 

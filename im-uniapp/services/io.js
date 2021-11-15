@@ -1,25 +1,27 @@
-import http from '@/common/http';
+import http from '@/utils/request';
 import io from '@hyoga/uni-socket.io';
 import store from '@/store';
 import urls from '@/common/urls';
-import config from '../../config/data';
-import robotHead from '@/assets/images/robot.png';
+import config from '@/config/data';
+import robotHead from '@/static/images/robot.png';
 
 // 处理消息体
 const handleMessage = message => {
   // 在入口处直接添加isMyself
-  message.isMyself = store.getters.userId === message.fromId;
+  message.isMyself = store.state.user.userId === message.fromId;
 };
 
 const IoService = {
   socket: null,
   scroll: null,
   async getSocket() {
-    const userId = store.getters.userId;
-    this.socket = io(config.domain.io, {
+    const userId = store.state.user.userId;
+    const token = store.state.user.token;
+    this.socket = io(config.domain.im, {
       query: {
         scene: 'im',
-        userId: userId
+        userId: userId,
+        token: token,
       },
       transports: ['websocket'],
       timeout: 5000,
@@ -83,6 +85,7 @@ const IoService = {
 };
 
 const getConversationList = () => {
+  store.commit('im/toggleLoad', false);
   http
     .get(urls.restful.conversations, {})
     .then(conversationList => {
@@ -126,8 +129,10 @@ const getConversationList = () => {
         ]
       });
       store.commit('im/updateConversationList', conversationList);
+      store.commit('im/toggleLoad', true);
     })
     .catch(error => {
+      store.commit('im/toggleLoad', true);
       console.log(error.errorMessage);
     });
 };

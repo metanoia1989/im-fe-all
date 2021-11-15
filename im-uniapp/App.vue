@@ -57,6 +57,7 @@ export default {
   },
   onShow: function() {
     console.log("App Show");
+    this.$store.dispatch('initLogin')
   },
   onHide: function() {
     console.log("App Hide");

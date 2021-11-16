@@ -94,7 +94,7 @@ export function request(options) {
       if (/20\d$/.test(String(res.statusCode)) && res.data.statusCode == 0) {
         // 兼容部分接口返回data为空的情况
         let data = res.data.data || []
-        resolve({ data, ok: true });
+        resolve(data);
       } else {
         // 未登录或未签约等情况
         if (!options.hideToast) errToast(res);

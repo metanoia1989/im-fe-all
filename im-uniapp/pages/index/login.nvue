@@ -72,8 +72,8 @@
         this.$http.post(this.$urls.login.login, {
           username: this.username,
           password: this.password
-				}).then((res) => {
-          this.$store.dispatch('login', res.data)
+				}).then((data) => {
+          this.$store.dispatch('login', data)
           uni.switchTab({
             url: '../tabbar/session'
           })

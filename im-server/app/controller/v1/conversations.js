@@ -19,6 +19,7 @@ class ConversationController extends Controller {
     for (const friendUser of friends) {
       const conversation = friendUser.conversation;
       delete friendUser.conversation;
+      friendUser.userInfo.photo = ctx.helper.getFileUrl(friendUser.userInfo.photo)
       conversation.target = friendUser;
       data.push(conversation);
     }
@@ -27,6 +28,7 @@ class ConversationController extends Controller {
       conversation = conversation.get({
         plain: true
       });
+      group.photo = ctx.helper.getFileUrl(group.photo)
       conversation.target = group;
       data.push(conversation);
     }

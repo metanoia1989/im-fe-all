@@ -3,11 +3,11 @@
 		<view class="nvue-page-head" ref="pagehead" id="pagehead">
 			<view class="navbar" ref="navbar">
 				<!--  #ifndef  MP-WEIXIN -->
-				<uni-nav-bar :fixed="false" :status-bar="true" @clickRight="showMenu" :loading="!loadFinish"
+				<uni-nav-bar :fixed="true" :status-bar="true" @clickRight="showMenu" :loading="!loadFinish"
 				 :rightIconBool="true" right-icon="plus" :title="loadFinish ? '聊天' : '加载中'"></uni-nav-bar>
 				<!--  #endif -->
 				<!--  #ifdef  MP-WEIXIN -->
-				<uni-nav-bar :fixed="false" :leftIconBool="true" left-icon="plus" :status-bar="true" @clickLeft="showMenu" :loading="!loadFinish"
+				<uni-nav-bar :fixed="true" :leftIconBool="true" left-icon="plus" :status-bar="true" @clickLeft="showMenu" :loading="!loadFinish"
 				 :rightIconBool="true" :title="loadFinish ? '聊天' : '加载中'"></uni-nav-bar>
 				<!--  #endif -->
 			</view>
@@ -24,20 +24,28 @@
 					<uni-swipe-action-item :threshold="80" :rightOptions="options" v-for="(item, index) in sessionList" :key="index"
 					 @click="swipeClick($event,index)">
 
-						<uni-list-chat :arrayIndex="index" v-if="item.chat_type == 'user'" :border="true" :title="$store.state.user.utils.getNickName(item.id, item.name)"
-						 :avatar="$store.state.user.utils.getImageCache(item.avatar)" :note="item.data" :clickable="true" badge-positon="left"
-						 :badge-text="item.noreadnum" @click="chatWindow(item.id,item.name)">
+						<uni-list-chat :arrayIndex="index" v-if="item.type == 'chat'"
+              :border="true" :title="item.target.username"
+              :avatar="item.target.userInfo.photo" :note="item.target.userInfo.sign"
+              :clickable="true" badge-positon="left"
+              :badge-text="Math.floor(Math.random() * 100)"
+              @click="chatWindow(item.id,item.target.username)">
+							<view class="chat-custom-right">
+								<text class="chat-custom-text">{{$tools.formatChatTime(item.updatedAt)}}</text>
+							</view>
+						</uni-list-chat>
 
+						<uni-list-chat :arrayIndex="index" v-else-if="item.type == 'groupchat'"
+              :border="true" :title="item.target.name"
+              :avatar-list="[]" :avatar="item.target.photo"
+              :note="item.target.introduction" :clickable="true" badge-positon="left"
+              :badge-text="Math.floor(Math.random() * 100)"
+              @click="chatGroupWindow(item.id,item.target.name)">
 							<view class="chat-custom-right">
-								<text class="chat-custom-text">{{$store.state.user.utils.formatChatTime(item.update_time)}}</text>
+								<text class="chat-custom-text">{{$tools.formatChatTime(item.updatedAt)}}</text>
 							</view>
 						</uni-list-chat>
-						<uni-list-chat :arrayIndex="index" v-else :border="true" :title="item.name" :avatar-list="$store.state.user.utils.getGroupAvatarList(item.id)"
-						 :note="item.data" :clickable="true" badge-positon="left" :badge-text="item.noreadnum" @click="chatGroupWindow(item.id,item.name)">
-							<view class="chat-custom-right">
-								<text class="chat-custom-text">{{$store.state.user.utils.formatChatTime(item.update_time)}}</text>
-							</view>
-						</uni-list-chat>
+
 					</uni-swipe-action-item>
 				</uni-swipe-action>
 			<!--  #ifdef  APP-PLUS -->
@@ -139,7 +147,7 @@
 		},
 		watch: {
 			sessionList() {
-
+        console.log("有数据了：", this.sessionList)
 			}
 		},
 		onLoad() {
@@ -195,12 +203,12 @@
 			},
 			chatWindow: function(sessionId, name) {
 				uni.navigateTo({
-					url: '/pages/chat/chat?id=' + sessionId + "&name=" + name,
+					url: '/pages/chat/chat?type=chat&id=' + sessionId + "&name=" + name,
 				})
 			},
 			chatGroupWindow: function(sessionId, name) {
 				uni.navigateTo({
-					url: '/pages/group/chatGroup?id=' + sessionId,
+					url: '/pages/chat/chat?type=groupchat&id=' + sessionId + "&name=" + name,
 				})
 			},
 			search: function(e) {
@@ -341,7 +349,7 @@
 		z-index: 10071;
 
 		/*  #ifndef  MP-WEIXIN  */
-		top: 180rpx;
+		top: 100rpx;
 		right: 20rpx;
 		/*  #endif  */
 

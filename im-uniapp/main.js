@@ -7,6 +7,7 @@ import storage from './utils/storage';
 import urls from './common/urls';
 import { router, RouterMount } from './router.js'
 import Cache from './utils/cache'
+import tools from './utils/tools'
 
 Vue.config.productionTip = false;
 
@@ -15,7 +16,8 @@ Vue.prototype.$http = request;
 Vue.prototype.$store = store;
 Vue.prototype.$storage = storage;
 Vue.prototype.$urls = urls;
-Vue.prototype.$Cache = Cache
+Vue.prototype.$Cache = Cache;
+Vue.prototype.$tools = tools;
 
 Vue.use(router)
 Vue.mixin(mixins)

@@ -133,7 +133,7 @@ const getConversationList = () => {
     })
     .catch(error => {
       store.commit('im/toggleLoad', true);
-      console.log(error.errorMessage);
+      console.log('获取会话数据失败', error);
     });
 };
 

@@ -3,6 +3,12 @@ const path = require('path');
 module.exports = appInfo => {
   const config = (exports = {});
 
+  // 文件存储
+  config.fileStorage = {
+    storage: 'local',
+    domain: 'http://127.0.0.1:7001',
+  }
+
   // use for cookie sign key, should change to your own and keep security
   config.keys = appInfo.name + '_1568190347866_4750';
 

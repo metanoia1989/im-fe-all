@@ -13,7 +13,7 @@ const TFPages = new TransfromPages({
 });
 
 module.exports = {
-  productionSourceMap: false, // 生成环境不打包map文件
+  productionSourceMap: true, // 生成环境不打包map文件
   configureWebpack: config => {
     return {
       plugins: [

@@ -81,7 +81,7 @@ export function deepClone(obj) {
   const newObj = obj instanceof Array ? [] : {};
   for (const key in obj) {
     if (obj.hasOwnProperty(key)) {
-      newObj[key] =        typeof obj[key] === 'object' ? deepClone(obj[key]) : obj[key];
+      newObj[key] = typeof obj[key] === 'object' ? deepClone(obj[key]) : obj[key];
     }
   }
   return newObj;
@@ -101,10 +101,10 @@ export function getTransformNumber(value, type = 'string') {
  */
 export function getCurrentDate(time, insert = '') {
   const date = time ? new Date(time) : new Date();
-    const year = date.getFullYear();
-    const month = getTransformNumber(date.getMonth() + 1);
-    const day = getTransformNumber(date.getDate());
-    const week = ['末', '一', '二', '三', '四', '五', '六'][date.getDay()];
+  const year = date.getFullYear();
+  const month = getTransformNumber(date.getMonth() + 1);
+  const day = getTransformNumber(date.getDate());
+  const week = ['末', '一', '二', '三', '四', '五', '六'][date.getDay()];
   return insert
     ? [year, month, day, week].join(insert)
     : [year, month, day, week];
@@ -279,32 +279,32 @@ export function getProvincesFactory(origin = []) {
  * @param {Nubmer} radix 生成uuid的基数(意味着返回的字符串都是这个基数),2-二进制,8-八进制,10-十进制,16-十六进制
  */
 export function getUid(len = 32, firstU = true, radix = null) {
-	const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
-	const uuid = [];
-	radix = radix || chars.length;
+  const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
+  const uuid = [];
+  radix = radix || chars.length;
 
-	if (len) {
-		// 如果指定uuid长度,只是取随机的字符,0|x为位运算,能去掉x的小数位,返回整数位
-		for (let i = 0; i < len; i++) uuid[i] = chars[0 | Math.random() * radix];
-	} else {
-		let r;
-		// rfc4122标准要求返回的uuid中,某些位为固定的字符
-		uuid[8] = uuid[13] = uuid[18] = uuid[23] = '-';
-		uuid[14] = '4';
+  if (len) {
+    // 如果指定uuid长度,只是取随机的字符,0|x为位运算,能去掉x的小数位,返回整数位
+    for (let i = 0; i < len; i++) uuid[i] = chars[0 | Math.random() * radix];
+  } else {
+    let r;
+    // rfc4122标准要求返回的uuid中,某些位为固定的字符
+    uuid[8] = uuid[13] = uuid[18] = uuid[23] = '-';
+    uuid[14] = '4';
 
-		for (let i = 0; i < 36; i++) {
-			if (!uuid[i]) {
-				r = 0 | Math.random() * 16;
-				uuid[i] = chars[(i == 19) ? (r & 0x3) | 0x8 : r];
-			}
-		}
-	}
-	// 移除第一个字符,并用u替代,因为第一个字符为数值时,该guuid不能用作id或者class
-	if (firstU) {
-		uuid.shift();
-		return `u${  uuid.join('')}`;
-	}
-		return uuid.join('');
+    for (let i = 0; i < 36; i++) {
+      if (!uuid[i]) {
+        r = 0 | Math.random() * 16;
+        uuid[i] = chars[(i == 19) ? (r & 0x3) | 0x8 : r];
+      }
+    }
+  }
+  // 移除第一个字符,并用u替代,因为第一个字符为数值时,该guuid不能用作id或者class
+  if (firstU) {
+    uuid.shift();
+    return `u${uuid.join('')}`;
+  }
+  return uuid.join('');
 }
 /**
  * @date 2020-11-12
@@ -313,7 +313,7 @@ export function getUid(len = 32, firstU = true, radix = null) {
  * @return {Array}  new array
  * @author mukuashi@icloud.com
  */
-export function  getNowTimeFactory(list = []) {
+export function getNowTimeFactory(list = []) {
   // 时间格式统一化，比如 6:30=>06:30
   const timeFactory = (time) => {
     const arr = time.split(':');
@@ -461,9 +461,9 @@ export function toLatLng(point) {
  * 距离单位换算
  * @param  Number
  */
-export function distanceUnit (dis) {
-  if (dis < 1000) return `${dis.toFixed(1) }米`;
-  return `${(Math.round(dis / 100) / 10).toFixed(1)  }公里`;
+export function distanceUnit(dis) {
+  if (dis < 1000) return `${dis.toFixed(1)}米`;
+  return `${(Math.round(dis / 100) / 10).toFixed(1)}公里`;
 }
 
 /**
@@ -509,12 +509,12 @@ export function getHexToRgba(hex, opacity) {
  * @returns random str
  */
 export function makeid(length) {
-    var result           = '';
-    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var charactersLength = characters.length;
-    for ( var i = 0; i < length; i++ ) {
-      result += characters.charAt(Math.floor(Math.random() *
- charactersLength));
-   }
-   return result;
+  var result = '';
+  var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() *
+      charactersLength));
+  }
+  return result;
 }

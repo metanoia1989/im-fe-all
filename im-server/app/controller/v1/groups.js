@@ -18,6 +18,8 @@ class GroupController extends Controller {
   async show() {
     const { ctx } = this;
     const group = await ctx.model.Group.findByPk(ctx.params.id);
+    const users = await group.getUsers()
+    group.users = users
 
     ctx.body = {
       statusCode: '0',

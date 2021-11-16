@@ -1,12 +1,22 @@
 import IoService from '@/services/io.js';
 
 export default {
+  namespaced: true,
 	state: {
 		userInfo: null,
     userId: null,
 		systemInfo:[],
 		token : ''
 	},
+  // getters
+  getters: {
+    userInfo(state) {
+      return state.userInfo;
+    },
+    token(state) {
+      return state.token;
+    },
+  },
 	mutations: {
 		updateUser(state, {
 			k,

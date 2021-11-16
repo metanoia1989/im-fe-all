@@ -20,36 +20,32 @@
 			<!--  #ifdef  APP-PLUS -->
 			<cell>
 			<!--  #endif -->
-				<uni-swipe-action class="swipe-action">
-					<uni-swipe-action-item :threshold="80" :rightOptions="options" v-for="(item, index) in sessionList" :key="index"
-					 @click="swipeClick($event,index)">
+        <template  v-for="(item, index) in sessionList">
+          <uni-list-chat :arrayIndex="index" v-if="item.type == 'chat'"
+            :border="true" :title="item.target.username"
+            :avatar="item.target.userInfo.photo" :note="item.target.userInfo.sign"
+            :clickable="true" badge-positon="left"
+            :badge-text="Math.floor(Math.random() * 100)"
+            :conversation="item"
+            @tap="chatWindow(item.id,item.target.username)">
+            <view class="chat-custom-right">
+              <text class="chat-custom-text">{{$tools.formatChatTime(item.updatedAt)}}</text>
+            </view>
+          </uni-list-chat>
 
-						<uni-list-chat :arrayIndex="index" v-if="item.type == 'chat'"
-              :border="true" :title="item.target.username"
-              :avatar="item.target.userInfo.photo" :note="item.target.userInfo.sign"
-              :clickable="true" badge-positon="left"
-              :badge-text="Math.floor(Math.random() * 100)"
-              :conversation="item"
-              @click="chatWindow(item.id,item.target.username)">
-							<view class="chat-custom-right">
-								<text class="chat-custom-text">{{$tools.formatChatTime(item.updatedAt)}}</text>
-							</view>
-						</uni-list-chat>
+          <uni-list-chat :arrayIndex="index" v-else-if="item.type == 'groupchat'"
+            :border="true" :title="item.target.name"
+            :avatar-list="[]" :avatar="item.target.photo"
+            :note="item.target.introduction" :clickable="true" badge-positon="left"
+            :badge-text="Math.floor(Math.random() * 100)"
+            :conversation="item"
+            @tap="chatGroupWindow(item.id,item.target.name)">
+            <view class="chat-custom-right">
+              <text class="chat-custom-text">{{$tools.formatChatTime(item.updatedAt)}}</text>
+            </view>
+          </uni-list-chat>
+        </template>
 
-						<uni-list-chat :arrayIndex="index" v-else-if="item.type == 'groupchat'"
-              :border="true" :title="item.target.name"
-              :avatar-list="[]" :avatar="item.target.photo"
-              :note="item.target.introduction" :clickable="true" badge-positon="left"
-              :badge-text="Math.floor(Math.random() * 100)"
-              :conversation="item"
-              @click="chatGroupWindow(item.id,item.target.name)">
-							<view class="chat-custom-right">
-								<text class="chat-custom-text">{{$tools.formatChatTime(item.updatedAt)}}</text>
-							</view>
-						</uni-list-chat>
-
-					</uni-swipe-action-item>
-				</uni-swipe-action>
 			<!--  #ifdef  APP-PLUS -->
 			</cell>
 			<!--  #endif -->

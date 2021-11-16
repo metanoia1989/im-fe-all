@@ -11,8 +11,14 @@
 				<loading-indicator class="indicator"></loading-indicator>
 			</refresh>
 			<!--  #endif -->
-			<view class="" v-for="(item,index) in activeConversation.msgList" :key="index" :id="'chatId_'+index">
-				<uni-chat-detail :session="activeConversation" :list="activeConversation.messageList" :item="item" :index="index"></uni-chat-detail>
+			<view class="" v-for="(message,index) in activeConversation.messageList" :key="index" :id="'chatId_'+index">
+				<!-- <uni-chat-detail :session="activeConversation" :list="activeConversation.messageList" :item="item" :index="index"></uni-chat-detail> -->
+        <message-item
+          ref="messages"
+          :key="message.id"
+          :message="message"
+          :conversationId="activeConversation.id"
+        ></message-item>
 			</view>
 			<text v-if="!socketConnected" class="system-msg">服务器已断开,尝试重新连接...</text>
 		</scroll-view>
@@ -49,16 +55,19 @@
 <script>
   import { mapGetters, mapMutations } from 'vuex';
   import IoService from '@/services/io.js';
+  import MessageItem from './components/MessageItem.vue'
 
 	// #ifdef APP-NVUE
 	const BindingX = uni.requireNativePlugin('bindingx');
 	const animation = uni.requireNativePlugin('animation');
 	// #endif
 
-	import {
-		mapState
-	} from 'vuex'
+	import { mapState } from 'vuex'
+
 	export default {
+    components: {
+      MessageItem,
+    },
 		data() {
 			return {
 				systemInfo: uni.getSystemInfoSync(),
@@ -184,6 +193,7 @@
 			}
 			this.scrollBottom();
 			this.ready = true;
+      console.log("当前会话数据", this.activeConversation)
 		},
 		computed: {
       ...mapGetters('im', ['activeConversation']),
@@ -242,7 +252,16 @@
           active: true
         });
       },
-
+      send(body) {
+        this.isEmoji = false;
+        IoService.sendMessage({
+          type: this.activeConversation.type,
+          toId: this.activeConversation.info.id.toString(),
+          fromId: this.userId,
+          conversationId: this.activeConversation.id,
+          body
+        });
+      },
 			onMessage: function(message) {
 				console.log('[聊天页] 接收到聊天信息', message);
 				if ((message.from_id === this.session.id && message.chat_type === 'user') || (message.chat_type === 'group' &&
@@ -850,19 +869,23 @@
 			//发文字
 			sendMsg: function() {
 				if (this.msg != "") {
-					let message = this.webSocket.formatSendData({
-						type: 'say',
-						data: this.msg,
-						to_id: this.session.id, // 接收人/群 id
-						to_name: this.session.name, // 接收人/群 名称
-						to_avatar: this.session.avatar, // 接收人/群 头像
-						chat_type: this.session.chat_type, // 接收类型
-						msg_type: 'text'
-					})
-					this.webSocket.send(message);
-					message.isSend = true;
-					this.msgList.push(message)
-					this.scrollBottom();
+					// let message = this.webSocket.formatSendData({
+					// 	type: 'say',
+					// 	data: this.msg,
+					// 	to_id: this.session.id, // 接收人/群 id
+					// 	to_name: this.session.name, // 接收人/群 名称
+					// 	to_avatar: this.session.avatar, // 接收人/群 头像
+					// 	chat_type: this.session.chat_type, // 接收类型
+					// 	msg_type: 'text'
+					// })
+					// this.webSocket.send(message);
+					// message.isSend = true;
+					// this.msgList.push(message)
+					// this.scrollBottom();
+          this.send({
+            msg: this.msg,
+            type: 'text'
+          });
 					this.msg = ""
 				}
 			},

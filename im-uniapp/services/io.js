@@ -27,9 +27,15 @@ const IoService = {
       timeout: 5000,
     });
 
+
     this.socket.on('connect', () => {
       console.log('socket连接成功！');
       getConversationList();
+      store.commit('im/toggleSocketStatus', true);
+    });
+
+    this.socket.on('disconnect', () => {
+      store.commit('im/toggleSocketStatus', false);
     });
 
     // 有新消息

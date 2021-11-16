@@ -29,6 +29,7 @@
               :avatar="item.target.userInfo.photo" :note="item.target.userInfo.sign"
               :clickable="true" badge-positon="left"
               :badge-text="Math.floor(Math.random() * 100)"
+              :conversation="item"
               @click="chatWindow(item.id,item.target.username)">
 							<view class="chat-custom-right">
 								<text class="chat-custom-text">{{$tools.formatChatTime(item.updatedAt)}}</text>
@@ -40,6 +41,7 @@
               :avatar-list="[]" :avatar="item.target.photo"
               :note="item.target.introduction" :clickable="true" badge-positon="left"
               :badge-text="Math.floor(Math.random() * 100)"
+              :conversation="item"
               @click="chatGroupWindow(item.id,item.target.name)">
 							<view class="chat-custom-right">
 								<text class="chat-custom-text">{{$tools.formatChatTime(item.updatedAt)}}</text>
@@ -89,9 +91,7 @@
 	</view>
 </template>
 <script>
-	import {
-		mapState
-	} from 'vuex'
+	import { mapState, mapMutations } from 'vuex'
 	import searchAnimation from './searchAnimation.js'
 	export default {
 		data() {

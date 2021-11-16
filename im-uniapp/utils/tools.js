@@ -158,11 +158,19 @@ function getGroupAvatarList(id) {
   return avatarList;
 }
 
+//返回上一页
+function back(delta = 1){
+  uni.navigateBack({
+    delta:delta
+  })
+}
+
 module.exports = {
   loopDir,
   cache_file,
   getCachedFiles,
   setCachedFiles,
   log,
-  formatChatTime
+  formatChatTime,
+  back,
 }

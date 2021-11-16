@@ -10,13 +10,13 @@
 				</view>
 				<!-- 头像组 -->
 				<view v-else class="uni-list-chat__header" :style="{'width':(avatarWidth+10)+'rpx','height':(avatarWidth+10)+'rpx'}">
-					
+
 					<view v-for="(item,index) in avatarList" :key="index" class="uni-list-chat__header-box" :class="computedAvatar"
 					 :style="{width:imageWidth+'rpx',height:imageWidth+'rpx'}">
 						<image class="uni-list-chat__header-image" :style="{width:(imageWidth)+'rpx',height:(imageWidth)+'rpx'}" :src="$store.state.user.utils.getImageCache(item)"
 						 mode="aspectFill"></image>
 					</view>
-					
+
 				</view>
 			</view>
 			<view v-if="badgeText&& badgePositon === 'left'" class="uni-list-chat__badge uni-list-chat__badge-pos" :class="[isSingle]"><text
@@ -66,12 +66,13 @@
 	 * @property {Array} 	avatarList 						头像组，格式为 [{url:''}]
 	 * @event {Function} 	click 							点击 uniListChat 触发事件
 	 */
-	import {
-		mapState
-	} from 'vuex'
+  import IoService from '@/services/io.js';
+  import { mapState, mapMutations } from 'vuex'
+
 	export default {
 		name: 'UniListChat',
 		props: {
+      conversation: Object,
 			arrayIndex: {
 				type: Number,
 				default: 0
@@ -128,7 +129,6 @@
 				type: [String,Boolean],
 				default: false
 			},
-			
 		},
 		// inject: ['list'],
 		computed: {
@@ -167,9 +167,9 @@
 			return {
 				isFirstChild: false,
 				border: true,
-				 
+
 				imageWidth: 50,
-				
+
 			}
 		},
 		mounted() {
@@ -178,18 +178,56 @@
 			// 	this.isFirstChild = true
 			// }
 			//this.border = this.list.border
-			 
+
 		},
 		watch:{
-			 
+
 		},
 		created() {
- 
+      if (this.conversation.type === 'chat') {
+        this.getUserInfo();
+      }
+      if (this.conversation.type === 'groupchat') {
+        this.getGroupInfo();
+      }
+      IoService.join(this.conversation.id);
 		},
 		methods: {
+    ...mapMutations('im', ['activateConversation', 'updateConversationInfo', 'removeConversation']),
 			onClick() {
-				this.$emit("click");
-			}
+        this.activateConversation({
+          conversationId: this.conversation.id
+        });
+        setTimeout(() => {
+          this.$emit("click");
+        }, 60);
+			},
+      getUserInfo() {
+        this.$http
+          .get(`${this.$urls.restful.userInfo}/${this.conversation.target.id}`, {})
+          .then(data => {
+            this.updateConversationInfo({
+              conversationId: this.conversation.id,
+              info: data
+            });
+          })
+          .catch(error => {
+            this.$toast(error.errorMessage);
+          });
+      },
+      getGroupInfo() {
+        this.$http
+          .get(`${this.$urls.restful.groups}/${this.conversation.target.id}`, {})
+          .then(data => {
+            this.updateConversationInfo({
+              conversationId: this.conversation.id,
+              info: data
+            });
+          })
+          .catch(error => {
+            this.$toast(error.errorMessage);
+          });
+      }
 		}
 	}
 </script>
@@ -354,7 +392,7 @@
 	}
 
 	.uni-list-chat__header-image {
-		
+
 		/* #ifdef APP-NVUE */
 		margin: 2rpx;
 		width: 100rpx;

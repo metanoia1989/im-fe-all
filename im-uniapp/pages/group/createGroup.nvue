@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<uni-nav-bar @clickLeft="$store.state.user.utils.back()" :leftIconBool="true" left-icon="back" :fixed="true"
+		<uni-nav-bar @clickLeft="$tools.back()" :leftIconBool="true" left-icon="back" :fixed="true"
 		 :status-bar="true" rightText="开始" :rightIconBool="true" @clickRight="create" title="发起群聊" background-color="#ebebeb"
 		 :moveRightBtn="true" titleStyle="font-size: 34rpx; font-weight: 500;"></uni-nav-bar>
 		<!--  #ifdef  MP-WEIXIN -->

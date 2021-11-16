@@ -13,14 +13,23 @@ const TFPages = new TransfromPages({
 });
 
 module.exports = {
-  productionSourceMap: true, // 生成环境不打包map文件
+  productionSourceMap: false, // 生成环境不打包map文件
   configureWebpack: config => {
+    let devtool = '';
+    if (process.env.NODE_ENV !== 'production' && (
+        process.env.UNI_PLATFORM === 'mp-baidu' ||
+        process.env.UNI_PLATFORM === 'mp-toutiao'
+    )) {
+      devtool = 'inline-source-map'
+    }
+
     return {
       plugins: [
         new TFPages.webpack.DefinePlugin({
           ROUTES: JSON.stringify(TFPages.routes)
         })
-      ]
+      ],
+      devtool,
     }
   },
   // 发布时删除console

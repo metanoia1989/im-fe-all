@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<uni-nav-bar :leftIconBool="true" @clickLeft="$store.state.user.utils.back()" left-icon="back" :fixed="true"
+		<uni-nav-bar :leftIconBool="true" @clickLeft="$tools.back()" left-icon="back" :fixed="true"
 		 :status-bar="true" :title="navBarTitle" :moveRightBtn="isWxapp" background-color="#e3e3e3" :rightIconBool="true" rightIcon="more-filled"
 		 @clickRight="more"></uni-nav-bar>
 		<scroll-view :animation="scrollAnimationData" ref="scrollview" @click="hideKey" scroll-y="true" class="scroll-view" :style="chatBodyBottom"
@@ -11,10 +11,10 @@
 				<loading-indicator class="indicator"></loading-indicator>
 			</refresh>
 			<!--  #endif -->
-			<view class="" v-for="(item,index) in msgList" :key="index" :id="'chatId_'+index">
-				<uni-chat-detail :session="session" :list="msgList" :item="item" :index="index"></uni-chat-detail>
+			<view class="" v-for="(item,index) in activeConversation.msgList" :key="index" :id="'chatId_'+index">
+				<uni-chat-detail :session="activeConversation" :list="activeConversation.messageList" :item="item" :index="index"></uni-chat-detail>
 			</view>
-			<text v-if="!webSocket.isOnline" class="system-msg">服务器已断开,尝试重新连接...</text>
+			<text v-if="!socketConnected" class="system-msg">服务器已断开,尝试重新连接...</text>
 		</scroll-view>
 
 		<view ref="foot" :animation="footAnimationData" class="flex-column-center" :style="'bottom:'+ KeyboardHeight +'rpx;'">
@@ -47,6 +47,9 @@
 	</view>
 </template>
 <script>
+  import { mapGetters, mapMutations } from 'vuex';
+  import IoService from '@/services/io.js';
+
 	// #ifdef APP-NVUE
 	const BindingX = uni.requireNativePlugin('bindingx');
 	const animation = uni.requireNativePlugin('animation');
@@ -107,14 +110,13 @@
 			}
 		},
 		destroyed() {
-			this.webSocket.destoryChatObject();
 		},
-		onLoad(option) {
+		async onLoad(option) {
 			this.safeBottom = this.systemInfo.safeAreaInsets.bottom > 0 ? this.systemInfo.safeAreaInsets.bottom : 0;
 			this.KeyboardHeight = this.safeBottom * 2;
 			this.sessionId = option.id;
 			this.nickname = option.name;
-			this.petName = this.$store.state.user.utils.getNickName(this.sessionId, this.nickname);
+			this.petName =  this.nickname;
 			this.navBarTitle = this.petName;
 			this.chatDetailBoxMaxWidth = this.systemInfo.screenWidth - 110;
 			this.recorderManager.onStart((e) => {
@@ -123,7 +125,24 @@
 			this.recorderManager.onStop((e) => {
 				this.recordEnd(e);
 			})
-		},
+
+      if (!(this.activeConversation.type === 'robot')) {
+        await this.activedConversation();
+      }
+      if (this.activeConversation.messageList.length >= this.activeConversation.messageCount) {
+        return;
+      }
+      this.increaseConversationPageNumber({
+        conversationId: this.activeConversation.id
+      });
+      this.$nextTick(() => {
+        IoService.getMessageList({
+          conversationId: this.activeConversation.id,
+          pageSize: this.activeConversation.pageSize,
+          pageNumber: this.activeConversation.pageNumber
+        });
+      });
+    },
 		onShow() {
 			// #ifndef  APP-NVUE
 			this.isWxapp = true;
@@ -132,10 +151,9 @@
 			uni.$on('onMessage', this.onMessage)
 			this.safeBottom = this.systemInfo.safeAreaInsets.bottom > 0 ? this.systemInfo.safeAreaInsets.bottom : 0;
 			this.KeyboardHeight = this.safeBottom * 2;
-			this.petName = this.$store.state.user.utils.getNickName(this.sessionId, this.nickname);
+			this.petName =  this.nickname;
 			this.navBarTitle = this.petName;
-			this.webSocket.readChatItem(this.sessionId);
-			this.friendInfo = this.$store.state.user.utils.getFriendInfoById(this.sessionId);
+			this.friendInfo = null;
 			// #ifdef H5
 			this.srcollHeight = this.systemInfo.windowHeight - 45 - 55;
 			// #endif
@@ -144,7 +162,7 @@
 			// #endif
 			var that = this;
 			if (this.ready) {
-				let msgList = this.webSocket.getChatDetail(false, this.sessionId, 1);
+				let msgList = []
 				if (!msgList) {
 					this.msgList = [];
 				} else {
@@ -154,11 +172,11 @@
 				this.defaultShowEmoji = true;
 			}
 			this.$nextTick(function() {
-				that.getSession();
+				// that.getSession();
 			})
 		},
 		onReady() {
-			let msgList = this.webSocket.getChatDetail(false, this.sessionId, 1);
+			let msgList = []
 			if (!msgList) {
 				this.msgList = [];
 			} else {
@@ -168,10 +186,11 @@
 			this.ready = true;
 		},
 		computed: {
+      ...mapGetters('im', ['activeConversation']),
 			...mapState({
-				user: state => state.user.user,
-				webSocket: state => state.user.webSocket,
-				sessionList: state => state.user.sessionList,
+				user: state => state.user.userInfo,
+				socketConnected: state => state.im.socketConnected,
+				sessionList: state => state.im.sessionList,
 			}),
 			chatBodyBottom() {
 				return `height:${this.srcollHeight}px;`
@@ -215,6 +234,14 @@
 
 		},
 		methods: {
+      ...mapMutations('im', ['clearMessage', 'clearMessages', 'increaseConversationPageNumber']),
+
+      async activedConversation() {
+        await this.$http.put('/api/v1/conversations/active', {
+          id: this.activeConversation.id,
+          active: true
+        });
+      },
 
 			onMessage: function(message) {
 				console.log('[聊天页] 接收到聊天信息', message);
@@ -288,7 +315,7 @@
 					duration: 220,
 					timingFunction: 'ease',
 				})
-				 
+
 				var footAnimation = uni.createAnimation({
 					duration: 220,
 					timingFunction: 'ease',
@@ -300,11 +327,11 @@
 					scrollAnimation.translateY(-h + 34).step()
 					footAnimation.translateY(-h + 34).step()
 				}
-				 
-				
+
+
 				this.scrollAnimationData = scrollAnimation.export()
 				this.footAnimationData = footAnimation.export()
-				 
+
 				// #endif
 
 				// #ifdef  APP-NVUE
@@ -574,8 +601,8 @@
 				}
 			},
 			collapse: function() {
-				
-				
+
+
 				// #ifndef  APP-NVUE
 				let move = uni.upx2px(180);
 				var menuAnimation = uni.createAnimation({
@@ -587,11 +614,11 @@
 				}else{
 					menuAnimation.translateX(0).step()
 				}
- 
+
 				this.menuAnimationData = menuAnimation.export()
-				 
+
 				// #endif
-				
+
 				// #ifdef  APP-NVUE
 				let moreMenu = this.getEl(this.$refs.moreMenu);
 				let move = uni.upx2px(180);
@@ -621,7 +648,7 @@
 					})
 				}
 				// #endif
-				
+
 				this.showMore = !this.showMore
 				//this.inputFocus()
 			},
@@ -671,10 +698,10 @@
 			},
 			inputFocus: function() {
 				var that = this;
-				
+
 				// #ifndef  APP-NVUE
-				 
-				
+
+
 				if (this.showMore) {
 					let move = uni.upx2px(180);
 					var menuAnimation = uni.createAnimation({
@@ -682,14 +709,14 @@
 						timingFunction: 'ease',
 					})
 					menuAnimation.translateX(0).step()
-					 
+
 					this.menuAnimationData = menuAnimation.export()
 					this.showMore = false;
 				}
-				 
+
 				// #endif
-				
-				
+
+
 				// #ifdef  APP-NVUE
 				if (this.showEmoji) {
 					let main_chatDetail = this.getEl(this.$refs.chatDetail);
@@ -716,7 +743,7 @@
 				}
 				// #endif
 			},
-			 
+
 			hideEmojiPanel: function() {
 				var that = this;
 				let duration = 400;
@@ -1108,9 +1135,9 @@
 		/* #ifdef H5 */
 		margin-left: 40rpx;
 		/* #endif */
-		
-		
-		
+
+
+
 	}
 
 	.voice-nv {

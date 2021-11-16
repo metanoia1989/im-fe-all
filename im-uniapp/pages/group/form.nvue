@@ -1,6 +1,6 @@
 <template>
 	<view class="nvue-page-root">
-		<uni-nav-bar :leftIconBool="true" @clickLeft="$store.state.user.utils.back()" leftText="取消" :fixed="true" :status-bar="true"
+		<uni-nav-bar :leftIconBool="true" @clickLeft="$tools.back()" leftText="取消" :fixed="true" :status-bar="true"
 		 :title="nabar" :rightIconBool="!admin" :rightButton="admin" :moveRightBtn="isWxapp" :rightButtonDisable="rightButtonDisable" @clickRight="submit"></uni-nav-bar>
 		<view class="uni-common-mt">
 			<view class="uni-form-item uni-column">
@@ -44,12 +44,12 @@
 				isWxapp:false,
 			}
 		},
-		computed: { 
+		computed: {
 			...mapState({
 				user: state => state.user.user,
-				
+
 			})
-			
+
 		},
 		watch:{
 			title(){
@@ -86,7 +86,7 @@
 			}
 			this.setOpData = option.data;
 			this.nabar = option.title;
-			
+
 			if(this.$store.state.user.groupList.length){
 				this.$store.state.user.groupList.forEach((item)=>{
 					if(item._id == this.groupId){
@@ -97,7 +97,7 @@
 			if(this.groupInfo.admin_id == this.user._id){
 				this.admin = true;
 			}
- 
+
 			if(uni.getSystemInfoSync().platform == "ios"){this.focus = true}
 		},
 		methods: {
@@ -109,7 +109,7 @@
 			submit: function() {
 				var that = this;
 				var data = {};
-				 
+
 				if(this.type=="title" || this.type=="notice"){
 					console.log(this.groupInfo)
 					console.log(this.user._id)
@@ -141,13 +141,13 @@
 					}).then((res) => {
 						console.log(res)
 						uni.hideLoading();
-						 
+
 						if (res.result.updated === 1) {
 							uni.showToast({
 								title: "修改成功",
 								duration: 2000
 							})
-								
+
 							that.$store.dispatch('getGroupIds')
 						} else {
 							uni.showToast({
@@ -163,7 +163,7 @@
 							title: '提示',
 							content: err
 						});
-						 
+
 					})
 				}else{
 					uni.showLoading();
@@ -203,8 +203,8 @@
 						});
 					})
 				}
-				
-				 
+
+
 			}
 
 		}
@@ -212,11 +212,11 @@
 </script>
 
 <style scoped>
-	
+
 	.nvue-page-root {
 		padding-bottom: 40rpx;
 	}
-	
+
 	.page-title {
 		/* #ifndef APP-NVUE */
 		display: flex;

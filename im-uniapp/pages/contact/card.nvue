@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<uni-nav-bar :leftIconBool="true" @clickLeft="$store.state.user.utils.back()" left-icon="back" :fixed="true" :status-bar="true"
+		<uni-nav-bar :leftIconBool="true" @clickLeft="$tools.back()" left-icon="back" :fixed="true" :status-bar="true"
 		 background-color="white" :rightIconBool="true" rightIcon="more-filled" @clickRight="more"></uni-nav-bar>
 
 		<view class="header">
@@ -89,7 +89,7 @@
 				})
 			}
 			this.petName = this.$store.state.user.utils.getNickName(this.adduser._id,this.adduser.nickname);
-			 
+
 		},
 		computed: {
 			...mapState({
@@ -100,7 +100,7 @@
 		},
 		methods: {
 			setNickName: function(){
-				
+
 				if(!this.isFriend){return;}
 				uni.navigateTo({
 					url: './form?id='+this.adduser._id+'&petName='+(this.petName != this.adduser.nickname ? this.petName : "")
@@ -150,20 +150,20 @@
 					url: '/pages/group/chatGroup?id=' + sessionId,
 				})
 			},
-			 
+
 		}
 	}
 </script>
 
 <style>
-	
+
 	/* #ifndef APP-NVUE */
 	page {
 		background-color: #ededed !important;
 	}
 	/* #endif */
-	
-	 
+
+
 
 	.header {
 		background-color: white;

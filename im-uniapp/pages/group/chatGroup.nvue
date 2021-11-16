@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<uni-nav-bar :leftIconBool="true" @clickLeft="$store.state.user.utils.back()" left-icon="back" :fixed="true"
+		<uni-nav-bar :leftIconBool="true" @clickLeft="$tools.back()" left-icon="back" :fixed="true"
 		 :status-bar="true" :title="navBarTitle" :moveRightBtn="isWxapp" background-color="#e3e3e3" :rightIconBool="true"
 		 rightIcon="more-filled" @clickRight="groupInfo"></uni-nav-bar>
 		<scroll-view :animation="scrollAnimationData" ref="scrollview" @click="hideKey" scroll-y="true" class="scroll-view"

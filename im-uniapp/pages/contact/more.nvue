@@ -1,36 +1,36 @@
 <template>
 	<view>
-		<uni-nav-bar :leftIconBool="true" @clickLeft="$store.state.user.utils.back()" left-icon="back" :fixed="true" :status-bar="true" title="资料设置" :rightIconBool="true"></uni-nav-bar>
-		 
+		<uni-nav-bar :leftIconBool="true" @clickLeft="$tools.back()" left-icon="back" :fixed="true" :status-bar="true" title="资料设置" :rightIconBool="true"></uni-nav-bar>
+
 		<view class="margin-bottom">
 			<uni-list :bounce="false" :border="false">
-				
+
 				<uni-list-item :textStyle="textStyle" @click="setNickName" title="设置备注昵称" :rightText="petName"
 				 :containerStyle="containerStyle" :rightTextStyle="rightTextStyle" />
-				 
+
 				<uni-list-item :borderWidth="720" :textStyle="textStyle" title="好友权限" :containerStyle="containerStyle"
 				 />
 			</uni-list>
 		</view>
-		
+
 		<view class="margin-bottom">
 			<uni-list :bounce="false" :border="false">
 				<uni-list-item :textStyle="textStyle" title="推荐给朋友" :containerStyle="containerStyle" />
 			</uni-list>
 		</view>
-		
+
 		<view class="margin-bottom">
 			<uni-list :bounce="false" :border="false">
 				<uni-list-item :textStyle="textStyle" title="设为特别关注" :containerStyle="containerStyle" :show-switch="true" :showArrow="false" />
 			</uni-list>
 		</view>
-		
+
 		<view class="margin-bottom">
 			<uni-list :bounce="false" :border="false">
 				<uni-list-item :textStyle="textStyle" title="拉入黑名单" :containerStyle="containerStyle" :show-switch="true" :showArrow="false" />
 			</uni-list>
 		</view>
-		
+
 		<view>
 			<view class="delete">
 				<view class="button" @click="showPopup()">
@@ -38,7 +38,7 @@
 				</view>
 			</view>
 		</view>
-		
+
 		<uni-popup ref="popup" type="bottom">
 			<view class="popup" :style="'padding-bottom:'+safeBottom+'rpx'">
 
@@ -46,23 +46,23 @@
 				<view class="delPanel">
 					<text class="deleted-text">将好友{{petName ? petName : nickname}}删除，并且删除该好友的聊天记录，同时在对方的好友列表将删除你</text>
 				</view>
-				
+
 				<view class="delete">
 					<view class="button" @click="del()">
 						<text class="button-text">删除好友</text>
 					</view>
 				</view>
-				
+
 				<view class="line">
-					
+
 				</view>
-				
+
 				<view class="delete">
 					<view class="button" @click="hidePopup()">
 						<text class="button-text" style="color: black;">取消</text>
 					</view>
 				</view>
-				
+
 			</view>
 		</uni-popup>
 
@@ -129,7 +129,7 @@
 							user_id:this.user._id,
 							friend_id:this.uid
 						}
-						
+
 					},
 				}).then((res) => {
 					uni.hideLoading();
@@ -182,7 +182,7 @@
 		border-radius: 5px;
 	}
 	.delete {
-		
+
 		justify-content: center;
 		align-items: center
 	}
@@ -196,25 +196,25 @@
 		align-items: center;
 		border-radius: 10rpx;
 	}
-	
+
 	.button-text {
 		color: #fa5151;
 		padding: 36rpx;
 		font-size: 34rpx;
 		font-weight: bold;
 	}
-	
+
 	.margin-bottom{
 		margin-bottom:10px;
 	}
-	
+
 	.popup{
 		width: 750rpx;
 		background-color: white;
 		border-top-left-radius:30rpx;
 		border-top-right-radius:30rpx;
 	}
-	
+
 	.delPanel{
 		padding: 30rpx;
 		justify-content: center;

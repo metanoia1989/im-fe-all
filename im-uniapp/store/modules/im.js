@@ -9,7 +9,8 @@ const state = {
       photo: robotHead,
       nickname: 'robot'
     }
-  ]
+  ],
+  socketConnected: false,
 };
 
 // getters
@@ -101,7 +102,10 @@ const mutations = {
     state.conversationList.find(conversation => conversation.id === conversationId).pageNumber++;
   },
   toggleLoad(state, status) {
-    state.loadFinish = status
+    state.loadFinish = status;
+  },
+  toggleSocketStatus(state, status) {
+    state.socketConnected = status;
   }
 };
 

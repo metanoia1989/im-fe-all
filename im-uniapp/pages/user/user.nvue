@@ -4,12 +4,12 @@
 			<uni-list :bounce="false" :border="false">
 				<uni-list-item @click="updateAvatar()" :textStyle="textStyle" title="头像" :containerStyle="containerStyle">
 					<template slot="right">
-						<image class="slot-image" :src="$store.state.user.utils.getImageCache(user.avatar)" mode="aspectFill"></image>
+						<image class="slot-image" :src="avatar" mode="aspectFill"></image>
 					</template>
-				</uni-list-item> 
-				<uni-list-item @click="formPage('nickname',user.nickname,'设置昵称')" :textStyle="textStyle" title="名字" :rightText="user.nickname"
+				</uni-list-item>
+				<uni-list-item @click="formPage('nickname',userInfo.nickname,'设置昵称')" :textStyle="textStyle" title="名字" :rightText="userInfo.nickname"
 				 :containerStyle="containerStyle" :rightTextStyle="rightTextStyle" />
-				<uni-list-item :borderWidth="720" :textStyle="textStyle" title="账号" :rightText="user.username" :containerStyle="containerStyle"
+				<uni-list-item :borderWidth="720" :textStyle="textStyle" title="账号" :rightText="userInfo.username" :containerStyle="containerStyle"
 				 :rightTextStyle="rightTextStyle" :showArrow="false" />
 
 				<uni-list-item @click="previewImage()" :borderWidth="720" :textStyle="textStyle" title="二维码" :containerStyle="containerStyle">
@@ -17,8 +17,8 @@
 						<uni-icons type="scan" size="32" color="#999" style="color:#999"></uni-icons>
 					</template>
 				</uni-list-item>
-				<uni-list-item @click="formPage('autograph',user.autograph,'设置签名')" :borderWidth="720" :textStyle="textStyle" title="个性签名"
-				 :rightText="user.autograph" :containerStyle="containerStyle" :rightTextStyle="rightTextStyle" />
+				<uni-list-item @click="formPage('sign',userInfo.sign,'设置签名')" :borderWidth="720" :textStyle="textStyle" title="个性签名"
+				 :rightText="userInfo.sign" :containerStyle="containerStyle" :rightTextStyle="rightTextStyle" />
 
 			</uni-list>
 		</view>
@@ -32,9 +32,7 @@
 </template>
 
 <script>
-	import {
-		mapState
-	} from 'vuex'
+	import { mapGetters } from 'vuex'
 	import md5 from "@/common/md5.js"
 	export default {
 		data() {
@@ -45,10 +43,10 @@
 			}
 		},
 		computed: {
-			...mapState({
-				user: state => state.user.user,
-				webSocket: state => state.user.webSocket,
-			})
+      ...mapGetters('user', ['userInfo']),
+      avatar() {
+        return this.userInfo.photo || '/static/images/head.png';
+      }
 		},
 		methods: {
 			formPage: function(type, data, title) {
@@ -83,8 +81,8 @@
 							})
 						}).then(res => {
 							uni.hideLoading()
-							
-							
+
+
 							if(res.fileID.indexOf("cloud://") != -1){
 								uniCloud.getTempFileURL({
 								    fileList: [res.fileID],
@@ -103,13 +101,13 @@
 											}).then((res) => {
 												that.$store.dispatch('getUserInfo')
 											}).catch((err) => {
-											
+
 											})
 											uni.showToast({
 												title: '头像上传成功',
 												duration: 2000
 											})
-											
+
 										}
 									},
 								    fail() {},
@@ -129,16 +127,16 @@
 								}).then((res) => {
 									that.$store.dispatch('getUserInfo')
 								}).catch((err) => {
-								
+
 								})
 								uni.showToast({
 									title: '头像上传成功',
 									duration: 2000
 								})
-								
-							 
+
+
 							}
-							  
+
 						}).catch((err) => {
 							uni.hideLoading()
 							if (err.message !== 'Fail_Cancel') {

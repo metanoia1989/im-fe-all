@@ -4,7 +4,13 @@ class userService extends Service {
   async getUserAttribute(id) {
     const { ctx } = this;
     const user = await ctx.model.User.findByPk(id);
-    const userInfo = await user.getUserInfo();
+    let userInfo = await user.getUserInfo({ raw: true});
+    userInfo = {
+      ...userInfo,
+      photo: ctx.helper.getFileUrl(userInfo.photo),
+      username: user.username,
+    }
+
     const roles = await user.getRoles().map(item => {
       delete item.user_role;
       return item;
@@ -32,6 +38,27 @@ class userService extends Service {
       userInfo,
       roles,
       rights
+    };
+  }
+
+  async updatePwd({ id, oldPassword, newPassword }) {
+    const { ctx } = this;
+
+    const user = await ctx.model.User.findByPk(id);
+    if (user.password !== ctx.helper.createPassword(oldPassword)) {
+      ctx.body = {
+        statusCode: '1',
+        errorMessage: '原密码错误'
+      };
+      return;
+    }
+    await user.update({ 
+      password: ctx.helper.createPassword(newPassword)
+    });
+    ctx.body = {
+      statusCode: '0',
+      errorMessage: null,
+      data: {}
     };
   }
 }

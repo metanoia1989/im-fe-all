@@ -11,8 +11,6 @@
 /pages/tabbar/contact 好友列表页
 /pages/tabbar/my 个人中心页				
 
-
-
 其他页面
 
 /pages/index/login 登录页面			
@@ -27,6 +25,9 @@
 /pages/user/user 个人信息页面 		
 /pages/user/form 个人信息字段编辑		
 
+这些聊天的页面适配还好，还需要开发朋友圈的功能。
+不过我这个朋友圈开发范围会大一些，默认为所有人可见，可以设置为仅好友可见，以及仅自己可见。
+可以聊天、可以发动态，这样才算基本的聊天功能。
 
 # 消息列表适配
 
@@ -92,7 +93,8 @@
 * [ ] 会话列表懒加载，只加载激活的会话，减轻请求压力
 * [ ] 会话消息未读数，现在后端没有实现这个逻辑
 * [ ] 会话消息群组头像，需要返回1~5个
-* [ ] 滑动有BUG，被单个会话项捕捉，无法滑动咧白哦
+* [ ] 滑动有BUG，被单个会话项捕捉，无法滑动。后续替换，不用这个组件。
+
 
 # 聊天页面适配
 
@@ -101,3 +103,19 @@
 
 两个页面 95% 的代码都是一样的，后面应该使用同一个页面来保证统一性。		
 
+聊天的页面太复杂了，原有的代码影响我的逻辑，后续来重构，直接从空白代码开始，需要那些用那些。
+
+
+# 其他页面适配
+其他页面都比较简单，先适配这些逻辑不复杂的。
+
+* [x] /pages/index/login 登录页面			
+* [x] /pages/index/regist 注册页面	
+* [x] /pages/tabbar/my 个人中心页	
+* [ ] /pages/user/user 个人信息页面 		
+* [ ] /pages/user/form 个人信息字段编辑	
+* [ ] /pages/tabbar/contact 好友列表页
+* [ ] /pages/group/createGroup 发起群聊页面		 	
+* [ ] /pages/contact/queryUsers 联系人添加好友页面 	
+* [ ] /pages/contact/groupList 群组列表页		
+* [ ] /pages/contact/applyList 好友申请页		

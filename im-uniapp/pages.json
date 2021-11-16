@@ -39,6 +39,20 @@
       }
 		},
 		{
+			"path": "pages/index/regist",
+			"style": {
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#fffffe",
+				"backgroundColor": "#fffffe",
+				"app-plus": {
+					"bounce": "none"
+				}
+			},
+      "meta": {
+        "auth": false
+      }
+		},
+		{
 			"path": "pages/tabbar/my",
 			"style": {
 				"navigationBarBackgroundColor": "#29c160",
@@ -186,21 +200,6 @@
 			},
       "meta": {
         "auth": true
-      }
-		},
-		{
-			"path": "pages/index/regist",
-			"style": {
-				"navigationBarTextStyle": "black",
-				"navigationBarBackgroundColor": "#fffffe",
-				"navigationBarTitleText": "账号注册",
-				"backgroundColor": "#fffffe",
-				"app-plus": {
-					"bounce": "none"
-				}
-			},
-      "meta": {
-        "auth": false
       }
 		},
 		{

@@ -1,7 +1,12 @@
 <template>
 	<view class="nvue-page-root">
+		<view class="page-title">
+			<view class="page-title__wrapper">
+				<text class="page-title__text">账号注册</text>
+			</view>
+		</view>
 
-		<view class="upload">
+		<view class="upload" v-if="false">
 			<view class="upload-box" v-if="!uploadImage" @click="onChooseImage()">
 				<uni-icons class="upload-box-icon" size="50" type="plusempty"></uni-icons>
 				<text class="upload-box-text">选择头像</text>

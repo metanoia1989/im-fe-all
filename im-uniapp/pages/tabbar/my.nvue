@@ -2,11 +2,11 @@
 	<view>
 		<view class="header">
 			<view class="userinfo">
-				<image class="avatar" :src="$store.state.user.utils.getImageCache(user.avatar)" mode="aspectFill"></image>
+				<image class="avatar" :src="avatar" mode="aspectFill"></image>
 				<view class="userinfo-box">
-					<text class="nickname">{{user.nickname}}</text>
+					<text class="nickname">{{userInfo.nickname}}</text>
 					<view class="qrcode-box" @click="previewImage()">
-						<text class="username">账号：{{user.username}}</text>
+						<text class="username">账号：{{userInfo.username}}</text>
 						<uni-icons type="scan" color="#ffffff" size="32"></uni-icons>
 					</view>
 				</view>
@@ -24,7 +24,7 @@
 				 :containerStyle="lineContainerStyle" />
 				<uni-list-item class="border-top" @click="about" thumb="../../static/images/about.png" :textStyle="textStyle" title="关于本APP"
 				 :containerStyle="lineContainerStyle" />
-			</uni-list> 
+			</uni-list>
 		</view>
 		<view class="margin-bottom" @click="logout">
 			<uni-list :bounce="false" :border="false">
@@ -36,9 +36,8 @@
 </template>
 
 <script>
-	import {
-		mapState
-	} from 'vuex'
+	import { mapGetters } from 'vuex'
+
 	import md5 from "@/common/md5.js"
 	export default {
 		data() {
@@ -50,11 +49,10 @@
 			}
 		},
 		computed: {
-			...mapState({
-				user: state => state.user.user,
-				webSocket: state => state.user.webSocket,
-				sessionList: state => state.user.sessionList,
-			})
+      ...mapGetters('user', ['userInfo']),
+      avatar() {
+        return this.userInfo.photo || '/static/images/head.png';
+      }
 		},
 		onShow() {
 			this.tabbarHeight = uni.getSystemInfoSync().windowBottom + 15;
@@ -98,10 +96,7 @@
 				});
 			},
 			about: function() {
-				uni.showModal({
-					title: '提示',
-					content: '暂未开发'
-				});
+        uni.showToast({ title: '暂未开发', icon: 'none' });
 			},
 			logout: function() {
 				var that = this;
@@ -110,7 +105,7 @@
 					content: '确定要退出登录吗？',
 					success: function(res) {
 						if (res.confirm) {
-							that.$store.dispatch('logout')
+							that.$store.dispatch('user/logout')
 						}
 					}
 				});
@@ -169,7 +164,7 @@
 	.scan {
 		color: #ffffff !important;
 	}
-	
+
 	/*  #ifndef  APP-NVUE  */
 		.scan text{
 			color: #ffffff !important;

@@ -1,18 +1,27 @@
-import http from '@/common/http';
+import http from '@/utils/request';
 import urls from '@/common/urls';
 import store from '@/store';
 
 export function getUserInfo() {
-  const userInfo = store.getters.userInfo;
+  const userInfo = store.state.user.userInfo;
   http.get(urls.restful.userInfo + `/${userInfo.id}`).then(data => {
-    store.commit('updateUserInfo', {
+    store.commit('user/updateUserInfo', {
       userInfo: data
     });
   });
 }
 
 export function updateUserInfo(params) {
-  const userInfo = store.getters.userInfo;
+  const userInfo = store.state.user.userInfo;
+  const data = Object.assign({}, userInfo, params)
+  return http.put(urls.restful.userInfo + `/${userInfo.id}`, data)
+    .then(() => {
+      store.commit('user/updateUserInfo', {
+        userInfo: data
+      });
+    });
+}
 
-  return http.put(urls.restful.userInfo + `/${userInfo.id}`, Object.assign({}, userInfo, params));
+export function updatePwd(params) {
+  return http.post(urls.restful.userInfo + `/updatePwd`, params);
 }

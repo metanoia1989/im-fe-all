@@ -18,15 +18,9 @@ export default {
     },
   },
 	mutations: {
-		updateUser(state, {
-			k,
-			v
-		}) {
-			if (state.user) {
-				state.user[k] = v
-				uni.setStorageSync('user', state.user)
-			}
-		}
+    updateUserInfo(state , { userInfo }) {
+      state.userInfo = userInfo;
+    },
 	},
 	actions: {
 		// 登录后处理
@@ -37,13 +31,6 @@ export default {
 			state.token = token;
 
       IoService.connect();
-		},
-		updateUser({ state, dispatch }, res) {
-			// 存到状态中
-			state.user = res
-			// 存储到本地存储中
-			uni.setStorageSync('user', res)
-			uni.setStorageSync('uid', res._id)
 		},
 		logout({ state, dispatch }) {
 			state.userInfo = null

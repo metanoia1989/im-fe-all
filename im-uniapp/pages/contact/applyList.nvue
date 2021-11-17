@@ -1,271 +1,111 @@
 <template>
 	<view class="main">
+		<uni-nav-bar
+      :leftIconBool="true"
+      @clickLeft="$tools.back()"
+      left-icon="back"
+      :fixed="true"
+      :status-bar="true"
+      @clickRight="queryUsers"
+      right-text="添加朋友"
+      title="新的朋友"
+      :rightIconBool="true"
+      background-color="#ebebeb"
+      titleStyle="font-size: 34rpx; font-weight: 500;">
+    </uni-nav-bar>
 
-
-		<!--  #ifdef  APP-NVUE -->
-		<uni-nav-bar :leftIconBool="true" @clickLeft="$tools.back()" left-icon="back" :fixed="true"
-		 :status-bar="true" @clickRight="queryUsers" right-text="添加朋友" title="新的朋友" :rightIconBool="true" background-color="#ebebeb"
-		 titleStyle="font-size: 34rpx; font-weight: 500;"></uni-nav-bar>
-		<!--  #endif -->
-
-		<!--  #ifndef  APP-NVUE -->
-		<uni-nav-bar :leftIconBool="true" @clickLeft="$tools.back()" left-icon="back" :fixed="true"
-		 :status-bar="true" title="新的朋友" :rightIconBool="true" background-color="#ebebeb" titleStyle="font-size: 34rpx; font-weight: 500;"></uni-nav-bar>
-		<!--  #endif -->
 		<uni-list>
 			<!-- #ifdef APP-NVUE -->
-			<cell>
-				<!-- #endif -->
-				<view class="search">
-					<uni-search-bar placeholder="账号/手机号" @confirm="search" @input="input" style=" background-color: #ebebeb; " bgColor="white"></uni-search-bar>
-					<button type="default" class="clearList" @click="clearApplyList">清空申请列表</button>
-				</view>
-				<!-- #ifdef APP-NVUE -->
-			</cell>
+			<cell class="line"></cell>
 			<!-- #endif -->
-			<!-- #ifdef APP-NVUE -->
-			<cell class="line">
-			</cell>
-			<!-- #endif -->
-			<uni-apply-list-item :disabled="true" v-for="(item,index) in friendApply" :key="index" :showArrow="false" :title="item.from_name"
-			 :thumb="$store.state.user.utils.getImageCache(item.from_avatar)" thumbStyle="width:80rpx;height:80rpx;border-radius:10rpx"
-			 textStyle="font-weight:400;color:black" :applyStatus="item.status" :listIndex="index" @clickApply="clickApply" />
+
+
+      <apply-item :apply="apply" v-for="apply of applyList" :key="apply.id" @click="onClick(apply)"></apply-item>
 
 			<!-- #ifdef APP-NVUE -->
-			<cell class="fixedView" :style="{ bottom : tabbarHeight + 'rpx'}">
-
-			</cell>
+			<cell class="fixedView" :style="{ bottom : tabbarHeight + 'rpx'}"></cell>
 			<!-- #endif -->
 			<!-- #ifndef APP-NVUE -->
-			<view class="fixedView" :style="{ bottom : tabbarHeight + 'rpx'}">
-			</view>
+			<view class="fixedView" :style="{ bottom : tabbarHeight + 'rpx'}"></view>
 			<!-- #endif -->
 
 		</uni-list>
+
+		<uni-popup ref="popup" type="bottom">
+			<view class="popup" :style="'padding-bottom:'+safeBottom+'rpx'">
+				<view class="success">
+					<view class="button" @click="onSelect(true)">
+						<text class="button-text">通过</text>
+					</view>
+				</view>
+				<view class="delete">
+					<view class="button" @click="onSelect(false)">
+						<text class="button-text">拒绝</text>
+					</view>
+				</view>
+				<view class="line"></view>
+				<view class="delete">
+					<view class="button" @click="hidePopup()">
+						<text class="button-text" style="color: black;">取消</text>
+					</view>
+				</view>
+			</view>
+		</uni-popup>
+
 	</view>
 </template>
 
 <script>
-	import {
-		mapState
-	} from 'vuex'
+  import ApplyItem from './components/ApplyItem';
+  import { mapGetters, mapMutations, mapActions } from 'vuex';
 	export default {
+    components: {
+      ApplyItem
+    },
 		data() {
 			return {
 				tabbarHeight: 0,
+				safeBottom:0,
+				systemInfo: uni.getSystemInfoSync(),
 			}
 		},
 		computed: {
-			...mapState({
-				friendApply: state => state.user.friendApply,
-				webSocket: state => state.user.webSocket,
-			})
+      ...mapGetters('friend', ['applyList']),
 		},
 		onReady() {
 			this.tabbarHeight = uni.getSystemInfoSync().windowBottom * 2;
 		},
-		created() {
-
-		},
+    onLoad() {
+			this.safeBottom = this.systemInfo.safeAreaInsets.bottom * 2;
+    },
 		methods: {
+      ...mapMutations('friend', ['updateApplyCount']),
+      ...mapActions('friend', ['getApplies']),
+      ...mapMutations('im', ['addConversation', 'activateConversation']),
 			queryUsers: function() {
 				uni.navigateTo({
 					url: '/pages/contact/queryUsers',
 				})
 			},
-			back: function() {
-				uni.navigateBack({
-					delta: 1
-				});
+			showPopup: function(){
+				this.$refs.popup.open()
 			},
-			clickApply: function(e) {
-
-				var fromUser = this.friendApply[e.listIndex];
-				uni.showLoading({
-					title: '加载中'
-				});
-
-				uniCloud.callFunction({
-					name: 'user',
-					data: {
-						$url: "addFriend",
-						token: this.$store.state.user.user_token,
-						data: {
-							user_id: fromUser.to_id,
-							friend_id: fromUser.from_id
-						}
-					},
-				}).then((res) => {
-					if (res.result.success) {
-						try {
-							let message = this.webSocket.formatSendData({
-								type: 'say',
-								data: '我们已经是好友啦，一起来聊天吧',
-								to_id: fromUser.from_id, // 接收人/群 id
-								to_name: fromUser.from_name, // 接收人/群 名称
-								to_avatar: fromUser.from_avatar, // 接收人/群 头像
-								chat_type: 'user', // 接收类型
-								msg_type: 'systen_agree_user'
-							})
-							this.webSocket.send(message);
-							this.webSocket.updateFriendApplyStatus(e.status, fromUser.from_id)
-							this.$store.dispatch('getFriendIds')
-							uni.hideLoading();
-							uni.showToast({
-								title: '已同意申请',
-								duration: 3000
-							});
-						} catch (e) {
-							uni.showModal({
-								title: '提示',
-								content: e
-							});
-						}
-					}
-				}).catch((err) => {
-					uni.hideLoading();
-					uni.showModal({
-						title: '提示',
-						content: err
-					});
-				})
-
-
+			hidePopup: function(){
+				this.$refs.popup.close()
 			},
-
-
-
-			clickApply2: function(e) {
-				uni.showLoading({
-					title: '加载中'
-				});
-				try {
-					var fromUser = this.friendApply[e.listIndex];
-					var friendIds = [1, 2, 3];
-					uniCloud.callFunction({
-						name: 'user',
-						data: {
-							$url: "getFriendIds",
-							token: this.$store.state.user.user_token,
-							data: {
-								ids: [fromUser.to_id, fromUser.from_id]
-							}
-						},
-					}).then((res) => {
-						if (res.result.data) {
-							var list = res.result.data;
-							list = list ? list : [];
-							var from_friendIds = [];
-							var to_friendIds = [];
-							list.forEach((item, index) => {
-								if (item._id == fromUser.from_id) {
-									if (item.friendIds !== undefined) {
-										from_friendIds = item.friendIds;
-									}
-								}
-								if (item._id == fromUser.to_id) {
-									if (item.friendIds !== undefined) {
-										to_friendIds = item.friendIds;
-									}
-								}
-							})
-							let from_index = from_friendIds.findIndex(item => item === fromUser.to_id);
-							let to_index = to_friendIds.findIndex(item => item === fromUser.from_id);
-							if (from_index === -1) {
-								from_friendIds.push(fromUser.to_id);
-							}
-							if (to_index === -1) {
-								to_friendIds.push(fromUser.from_id);
-							}
-							uniCloud.callFunction({
-								name: 'user',
-								data: {
-									$url: "addFriend",
-									token: this.$store.state.user.user_token,
-									data: {
-										from_id: fromUser.from_id,
-										to_id: fromUser.to_id,
-										from_friendIds: from_friendIds,
-										to_friendIds: to_friendIds,
-									}
-								},
-							}).then((res) => {
-								uni.hideLoading();
-								console.log(res)
-								if (res.result.success) {
-									try {
-										let message = this.webSocket.formatSendData({
-											type: 'say',
-											data: '我们已经是好友啦，一起来聊天吧',
-											to_id: fromUser.from_id, // 接收人/群 id
-											to_name: fromUser.from_name, // 接收人/群 名称
-											to_avatar: fromUser.from_avatar, // 接收人/群 头像
-											chat_type: 'user', // 接收类型
-											msg_type: 'systen_agree_user'
-										})
-										this.webSocket.send(message);
-										this.webSocket.updateFriendApplyStatus(e.status, fromUser.from_id)
-										this.$store.dispatch('getFriendIds')
-										uni.hideLoading();
-										uni.showToast({
-											title: '已同意申请',
-											duration: 3000
-										});
-									} catch (e) {
-										uni.showModal({
-											title: '提示',
-											content: e
-										});
-									}
-								} else {
-									uni.showModal({
-										title: '提示',
-										content: res.result.msg
-									});
-								}
-							}).catch((err) => {
-								uni.hideLoading();
-								uni.showModal({
-									title: '提示',
-									content: err
-								});
-							})
-						}
-					}).catch((err) => {
-						uni.hideLoading();
-						uni.showModal({
-							title: '提示',
-							content: err
-						});
-					})
-				} catch (e) {
-					uni.hideLoading();
-					uni.showModal({
-						title: '提示',
-						content: e
-					});
-				}
-
-
-
-			},
-			clearApplyList: function() {
-				var that = this;
-				uni.showModal({
-					title: '提示',
-					content: '确认清空好友申请列表吗？',
-					success: function(res) {
-						if (res.confirm) {
-							that.webSocket.clearFriendApply();
-							uni.showToast({
-								title: '清空成功',
-								duration: 3000
-							});
-						}
-					}
-				});
-			},
-
+      onSelect(result) {
+        if (this.activeApplyType === 'user') {
+          this.$services.userService.applyFriend(this.activeApplyId, result);
+        } else if (this.activeApplyType) {
+          this.$services.userService.applyGroup(this.activeApplyId, result);
+        }
+        this.hidePopup();
+      },
+      onClick(apply) {
+        this.activeApplyId = apply.id;
+        this.activeApplyType = apply.type;
+        this.showPopup();
+      },
 		}
 	}
 </script>
@@ -287,4 +127,43 @@
 	.clearList {
 		width: 750rpx;
 	}
+
+	.popup{
+		width: 750rpx;
+		background-color: white;
+		border-top-left-radius:30rpx;
+		border-top-right-radius:30rpx;
+	}
+
+	.delPanel{
+		padding: 30rpx;
+		justify-content: center;
+		text-align: center;
+		align-items: center;
+		border-bottom-width: 1px;
+		border-bottom-color: #f8f8f8;
+	}
+	.deleted-text{
+		color: gray;
+		font-size: 28rpx;
+	}
+	.button {
+		width: 750rpx;
+		background-color: white;
+		justify-content: center;
+		align-items: center;
+		border-radius: 10rpx;
+	}
+
+	.button-text {
+		padding: 36rpx;
+		font-size: 34rpx;
+		font-weight: bold;
+	}
+  .delete .button-text {
+		color: #fa5151;
+  }
+  .success .button-text {
+		color: #41b883;
+  }
 </style>

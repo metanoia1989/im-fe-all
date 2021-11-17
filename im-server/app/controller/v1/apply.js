@@ -24,8 +24,11 @@ class ApplyController extends Controller {
         toId: iterator.toId,
         fromId: iterator.fromId
       };
-      let fromUser = await ctx.model.User.findByPk(apply.fromId);
+      let fromUser = await ctx.model.User.findByPk(apply.fromId, {
+        attributes: { exclude: ['password'] }
+      });
       let userInfo = await fromUser.getUserInfo();
+      userInfo.photo = ctx.helper.getFileUrl(userInfo.photo);
       userInfo = userInfo.get({
         plain: true
       });
@@ -35,7 +38,9 @@ class ApplyController extends Controller {
       fromUser.userInfo = userInfo;
       apply.from = fromUser;
       if (apply.type === 'user') {
-        let toUser = await ctx.model.User.findByPk(apply.toId);
+        let toUser = await ctx.model.User.findByPk(apply.toId, {
+          attributes: { exclude: ['password'] }
+        });
         userInfo = await toUser.getUserInfo();
         userInfo = userInfo.get({
           plain: true

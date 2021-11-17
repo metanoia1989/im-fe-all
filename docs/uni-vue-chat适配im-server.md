@@ -150,4 +150,8 @@ codemirror 在线编辑器
 uni-app项目：在uni-popup弹框组件中引用uni-list 列表无法滑动 https://www.jianshu.com/p/6ec274e28cfc 
 后面直接把 uni-list-item 替换掉，自己来写个组件，解决这个问题。
 
+这个到时候，iOS上只能是网页了。
+并且检测如果是微信访问，就跳转一个引导页，引导浏览器访问。
+如果是安卓，就强制要求下载APP。
+
   

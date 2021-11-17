@@ -18,7 +18,7 @@
 			<view class="text-box">
 
 				<view class="previewImage" @click="previewImage()">
-					<text class="username">我的账号：{{user.username}}</text>
+					<text class="username">我的账号：{{userInfo.username}}</text>
 					<uni-icons type="scan" size="30" style="color: green;"></uni-icons>
 				</view>
 			</view>
@@ -40,9 +40,7 @@
 </template>
 
 <script>
-	import {
-		mapState
-	} from 'vuex'
+	import { mapGetters, mapMutations } from 'vuex'
 	import md5 from "@/common/md5.js"
 	export default {
 
@@ -52,10 +50,7 @@
 			}
 		},
 		computed: {
-			...mapState({
-				user: state => state.user.user,
-				webSocket: state => state.user.webSocket
-			})
+      ...mapGetters('user', ['userInfo']),
 		},
 		onLoad() {
 

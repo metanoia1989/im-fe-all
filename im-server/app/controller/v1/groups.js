@@ -6,7 +6,12 @@ class GroupController extends Controller {
 
     // 注意这里需要经过两次查询
     const user = await ctx.model.User.findByPk(ctx.state.user.id);
-    const data = await user.getGroups();
+    let data = await user.getGroups();
+
+    data = data.map(item => {
+      item.photo = ctx.helper.getFileUrl(item.photo)
+      return item;
+    });
 
     ctx.body = {
       statusCode: '0',

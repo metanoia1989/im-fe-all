@@ -1,38 +1,43 @@
 <template>
 	<view>
-		<uni-nav-bar :leftIconBool="true" @clickLeft="$tools.back()" left-icon="back" :fixed="true" :status-bar="true" @clickRight="addFriend" right-text=""
-		 title="群聊" background-color="#ebebeb" titleStyle="font-size: 34rpx; font-weight: 500;"></uni-nav-bar>
+		<uni-nav-bar
+      :leftIconBool="true"
+      left-icon="back"
+      @clickLeft="$tools.back()"
+      :fixed="true"
+      :status-bar="true"
+      title="群聊"
+      background-color="#ebebeb"
+      titleStyle="font-size: 34rpx; font-weight: 500;">
+    </uni-nav-bar>
+
 		<uni-list :border="false">
 			<!-- #ifdef APP-NVUE -->
 			<cell>
-				<!-- #endif -->
-				<view class="search">
-					<uni-search-bar placeholder="名称" style=" background-color: #ebebeb; " bgColor="white"></uni-search-bar>
-				</view>
-				<!-- #ifdef APP-NVUE -->
-			</cell>
 			<!-- #endif -->
 
-			<!-- #ifdef APP-NVUE -->
-			<cell v-for="(item,index) in groupList">
-				<uni-list-chat :arrayIndex="index" :avatarWidth="80" :border="true" :title="item.title" :avatar-list="$store.state.user.utils.getGroupAvatarList(item._id)" :clickable="true"
-				 badge-positon="left" @click="chatGroupWindow(item._id,item.title)">
+        <uni-list-item
+          v-for="(item, index) in groupList" :key="index"
+          :borderWidth="630"
+          :showArrow="false"
+          @click="">
+          <view class="user-box">
+            <view class="slot-box">
+              <image class="slot-image" :src="item.photo" mode="aspectFill"></image>
+            </view>
+            <text class="slot-text">{{item.name}}</text>
+          </view>
+        </uni-list-item>
 
-				</uni-list-chat>
-			</cell>
-			<cell class="fixedView" :style="{ bottom : tabbarHeight + 'rpx'}">
+			<!-- #ifdef APP-NVUE -->
 			</cell>
 			<!-- #endif -->
 
 			<!-- #ifndef APP-NVUE -->
-			<view v-for="(item,index) in groupList">
-				<uni-list-chat :arrayIndex="index" :avatarWidth="80" :border="true" :title="item.title" :avatar-list="$store.state.user.utils.getGroupAvatarList(item._id)" :clickable="true"
-				 badge-positon="left" @click="chatGroupWindow(item._id,item.title)">
-
-				</uni-list-chat>
-			</view>
-			<view class="fixedView" :style="{ bottom : tabbarHeight + 'rpx'}">
-			</view>
+			<view class="fixedView" :style="{ bottom : tabbarHeight + 'rpx'}"></view>
+			<!-- #endif -->
+			<!-- #ifdef APP-NVUE -->
+			<cell class="fixedView" :style="{ bottom : tabbarHeight + 'rpx'}"></cell>
 			<!-- #endif -->
 
 		</uni-list>
@@ -40,9 +45,8 @@
 </template>
 
 <script>
-	import {
-		mapState
-	} from 'vuex'
+
+	import { mapGetters, mapActions } from 'vuex'
 	export default {
 		data() {
 			return {
@@ -50,19 +54,19 @@
 			}
 		},
 		computed: {
-			...mapState({
-				user: state => state.user.user,
-				webSocket: state => state.user.webSocket,
-				groupList: state => state.user.groupList
-			})
+      ...mapGetters('friend', ['groupList'])
 		},
 		onShow(){
 
 		},
+    onLoad(options) {
+      this.getGroupList();
+    },
 		onReady() {
 			this.tabbarHeight = uni.getSystemInfoSync().windowBottom * 2;
 		},
 		methods: {
+      ...mapActions('friend', ['getGroupList']),
 			chatGroupWindow: function(sessionId, name) {
 				uni.navigateTo({
 					url: '/pages/group/chatGroup?id=' + sessionId,
@@ -73,5 +77,39 @@
 </script>
 
 <style scoped>
+	.user-box {
+		flex-direction: row;
+		align-items: center;
+	}
+
+	.slot-box {
+		/* #ifndef APP-NVUE */
+		display: flex;
+		/* #endif */
+		flex-direction: row;
+		align-items: center;
+	}
+
+	.slot-image {
+		/* #ifndef APP-NVUE */
+		display: block;
+		/* #endif */
+		margin-right: 20rpx;
+		width: 80rpx;
+		height: 80rpx;
+		border-radius: 10rpx;
+	}
+
+	.slot-text {
+		flex: 1;
+		font-size: 34rpx;
+		color: black;
+		lines: 3;
+		width: 500rpx;
+		overflow: hidden;
+		/* #ifndef APP-NVUE */
+		word-wrap: break-word;
+		/* #endif */
+	}
 
 </style>

@@ -39,7 +39,7 @@ const mutations = {
     state.applyCount = count;
   },
   updateGroupList(state, data) {
-    state.friendList = data;
+    state.groupList = data;
   },
   updateCardUser(state, data) {
     state.cardUser = data;

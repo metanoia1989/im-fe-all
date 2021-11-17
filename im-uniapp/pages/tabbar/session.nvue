@@ -13,15 +13,20 @@
         </uni-nav-bar>
 			</view>
 		</view>
-		<uni-list :border="false" v-if="!showSearch" :style="{'margin-bottom':tabbarHeight+'rpx'}">
+		<uni-list :border="false" :scrollY="true" v-if="!showSearch" :style="{'margin-bottom':tabbarHeight+'rpx'}">
 			<!--  #ifdef  APP-PLUS -->
 			<cell>
 			<!--  #endif -->
         <template  v-for="(item, index) in sessionList">
-          <uni-list-chat :arrayIndex="index" v-if="item.type == 'chat'"
-            :border="true" :title="item.target.username"
-            :avatar="item.target.userInfo.photo" :note="item.target.userInfo.sign"
-            :clickable="true" badge-positon="left"
+          <!-- <conversation-item :conversation="item" :key="item.id" /> -->
+          <uni-list-chat
+            :arrayIndex="index" v-if="item.type == 'chat'"
+            :border="true"
+            :title="item.target.username"
+            :avatar="item.target.userInfo.photo"
+            :note="item.target.userInfo.sign"
+            :clickable="true"
+            badge-positon="left"
             :badge-text="Math.floor(Math.random() * 100)"
             :conversation="item"
             @tap="chatWindow(item.id,item.target.username)">
@@ -63,7 +68,12 @@
 <script>
 	import { mapState, mapMutations } from 'vuex'
 	import searchAnimation from './searchAnimation.js'
+  import ConversationItem from './components/ConversationItem';
+
 	export default {
+    components: {
+      ConversationItem
+    },
 		data() {
 			return {
 				extraIconChat: {

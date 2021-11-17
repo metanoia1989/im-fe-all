@@ -14,6 +14,10 @@ const TFPages = new TransfromPages({
 
 module.exports = {
   productionSourceMap: false, // 生成环境不打包map文件
+  devServer: {
+    host: '0.0.0.0',
+    port: 8000,
+  },
   configureWebpack: config => {
     let devtool = '';
     if (process.env.NODE_ENV !== 'production' && (

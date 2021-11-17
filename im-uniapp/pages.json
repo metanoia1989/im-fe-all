@@ -12,10 +12,10 @@
 				"navigationBarBackgroundColor": "#ededed",
 				"navigationBarTitleText": "",
 				"navigationStyle": "custom",
-				"disableScroll": true,
+				// "disableScroll": true,
 				"app-plus": {
 					"titleNView": false,
-					"bounce": "none",
+					// "bounce": "none",
 					"background": "#ffffff"
 				}
 			},
@@ -138,7 +138,7 @@
 				"navigationBarTextStyle": "black",
 				"navigationBarBackgroundColor": "#e3e3e3",
 				"backgroundColor": "#e3e3e3",
-				"disableScroll": true,
+				// "disableScroll": true,
 				"navigationStyle": "custom",
 				"app-plus": {
 					"animationType": "pop-in",
@@ -209,10 +209,10 @@
 				"navigationBarBackgroundColor": "#ededed",
 				"navigationBarTitleText": "",
 				"navigationStyle": "custom",
-				"disableScroll": true,
+				// "disableScroll": true,
 				"app-plus": {
-					"titleNView": false,
-					"bounce": "none"
+					"titleNView": false
+					// "bounce": "none"
 				}
 			},
       "meta": {
@@ -227,10 +227,10 @@
 				"backgroundColor": "#ebebeb",
 				"navigationStyle": "custom",
 				"backgroundColorTop": "#ebebeb",
-				"disableScroll": true,
+				// "disableScroll": true,
 				"app-plus": {
-					"titleNView": false,
-					"bounce": "none"
+					"titleNView": false
+					// "bounce": "none"
 				}
 			},
       "meta": {
@@ -262,10 +262,10 @@
 				"navigationBarTitleText": "",
 				"backgroundColor": "#ebebeb",
 				"navigationStyle": "custom",
-				"disableScroll": true,
+				// "disableScroll": true,
 				"app-plus": {
-					"titleNView": false,
-					"bounce": "none"
+					"titleNView": false
+					// "bounce": "none"
 				}
 			},
       "meta": {

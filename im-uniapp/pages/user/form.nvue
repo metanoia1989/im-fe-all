@@ -36,7 +36,7 @@
 
 <script>
 	import { mapGetters } from 'vuex'
-  import { getUserInfo, updateUserInfo, updatePwd } from '@/services/edit.js';
+  import userService from '@/services/user.js';
 
 	export default {
 		data() {
@@ -88,7 +88,7 @@
 				}
 				var that = this;
 				uni.showLoading();
-        updatePwd({
+        userService.updatePwd({
           oldPassword: this.oldPassword,
           newPassword: this.newPassword,
           passwordConfirmation: this.passwordConfirmation
@@ -104,10 +104,10 @@
 				data[this.type] = this.formdata[this.type];
 
 				uni.showLoading();
-        updateUserInfo(data)
+        userService.updateUserInfo(data)
           .then(() => {
             uni.showToast({ title: '操作完成！', icon: 'none' });
-            getUserInfo();
+            userService.getUserInfo();
             this.$router.back();
           })
           .then(() => {

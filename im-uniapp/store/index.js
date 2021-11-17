@@ -6,6 +6,7 @@ import plugins from './plugins';
 import auth from './modules/auth'
 import user from './modules/user.js';
 import im from './modules/im.js';
+import friend from './modules/friend.js';
 
 Vue.use(Vuex);
 
@@ -36,7 +37,8 @@ export default new Vuex.Store({
   modules: {
     auth,
     user,
-    im
+    im,
+    friend,
   },
   plugins: plugins,
 });

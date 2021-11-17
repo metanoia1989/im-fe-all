@@ -2,12 +2,13 @@ import Vue from 'vue';
 import App from './App';
 import store from './store';
 import mixins from './mixins';
-import request from './utils/request';
-import storage from './utils/storage';
 import urls from './common/urls';
 import { router, RouterMount } from './router.js'
 import Cache from './utils/cache'
 import tools from './utils/tools'
+import request from './utils/request';
+import storage from './utils/storage';
+import services from './services';
 
 Vue.config.productionTip = false;
 
@@ -18,6 +19,7 @@ Vue.prototype.$storage = storage;
 Vue.prototype.$urls = urls;
 Vue.prototype.$Cache = Cache;
 Vue.prototype.$tools = tools;
+Vue.prototype.$services = services;
 
 Vue.use(router)
 Vue.mixin(mixins)

@@ -5,11 +5,11 @@
 
 		<view class="header">
 			<view class="userinfo">
-				<image class="avatar" :src="$store.state.user.utils.getImageCache(adduser.avatar)" mode="aspectFill"></image>
+				<image class="avatar" :src="cardUser.userInfo.photo" mode="aspectFill"></image>
 				<view class="userinfo-box">
 					<text class="nickname">{{petName}}</text>
-					<text class="username" v-if="petName != adduser.nickname">昵称：{{adduser.nickname}}</text>
-					<text class="username">账号：{{adduser.username}}</text>
+					<text class="username" v-if="petName != cardUser.userInfo.nickname">昵称：{{cardUser.userInfo.nickname}}</text>
+					<text class="username">账号：{{cardUser.username}}</text>
 				</view>
 			</view>
 			<view class="">
@@ -20,7 +20,7 @@
 		</view>
 		<view class="margin-bottom">
 			<uni-list :bounce="false" :border="false">
-				<uni-list-item :textStyle="textStyle" title="个性签名" :rightText="adduser.autograph ? adduser.autograph : '他还没有签名呢～'" :containerStyle="containerStyle"
+				<uni-list-item :textStyle="textStyle" title="个性签名" :rightText="cardUser.userInfo.sign ? cardUser.userInfo.sign : '他还没有签名呢～'" :containerStyle="containerStyle"
 				 :rightTextStyle="rightTextStyle" :showArrow="false" />
 				<uni-list-item :textStyle="textStyle" title="来源" :rightText="rightText" :containerStyle="containerStyle"
 				 :rightTextStyle="rightTextStyle" :showArrow="false" />
@@ -36,12 +36,12 @@
 				</view>
 			</view>
 			<view v-if="isFriend" class="send">
-				<view class="button" @click="chatWindow(adduser._id,adduser.nickname)">
+				<view class="button" @click="chatWindow(cardUser.id,cardUser.userInfo.nickname)">
 					<text class="button-text">发消息</text>
 				</view>
 			</view>
 			<view v-if="isFriend" class="audio">
-				<view class="button" @click="chatWindow(adduser._id,adduser.nickname)">
+				<view class="button" @click="chatWindow(cardUser.id,cardUser.userInfo.nickname)">
 					<text class="button-text">音视频通话</text>
 				</view>
 			</view>
@@ -50,26 +50,19 @@
 </template>
 
 <script>
-	import {
-		mapState,
-		mapMutations
-	} from 'vuex'
+	import { mapGetters, mapMutations } from 'vuex'
+
 	export default {
 		data() {
 			return {
-				me:false,
-				adduser: '',
-				isFriend: false,
 				containerStyle: 'margin-top:12rpx;margin-bottom:12rpx;margin-left:8rpx;',
 				rightTextStyle: 'font-size:34rpx;font-weight:400;width: 480rpx;',
 				textStyle:'font-weight:400',
 				rightText:'来自账号搜索',
-				petName:''
 			}
 		},
 		onLoad(option) {
-			var cardUser = uni.getStorageSync('cardUser');
-			if (!cardUser) {
+			if (!this.cardUser) {
 				uni.navigateBack({
 					delta: 1
 				})
@@ -78,32 +71,32 @@
 			if(option.type == "qrcode"){
 				this.rightText = "来自扫描二维码"
 			}
-			this.adduser = cardUser;
-			this.isFriend = false;
-			if(this.adduser._id == this.user._id){this.me = true;}
-			if (this.friendList) {
-				this.friendList.forEach((friendItem, friendIndex) => {
-					if (friendItem._id == this.adduser._id) {
-						this.isFriend = true;
-					}
-				})
-			}
-			this.petName = this.$store.state.user.utils.getNickName(this.adduser._id,this.adduser.nickname);
-
 		},
 		computed: {
-			...mapState({
-				user: state => state.user.user,
-				webSocket: state => state.user.webSocket,
-				friendList: state => state.user.friendList
-			})
+      ...mapGetters('friend', ['cardUser', 'friendList']),
+      ...mapGetters('user', ['userInfo']),
+      isFriend() {
+        let flag = false;
+				this.friendList.forEach((friendItem, friendIndex) => {
+					if (friendItem.id == this.cardUser.id) {
+            flag = true;
+					}
+				})
+        return flag;
+      },
+      me() {
+        return this.cardUser.id == this.userInfo.id
+      },
+      petName() {
+        return this.cardUser.userInfo.nickname;
+      },
 		},
 		methods: {
 			setNickName: function(){
-
-				if(!this.isFriend){return;}
+        return
+				if(!this.isFriend){ return; }
 				uni.navigateTo({
-					url: './form?id='+this.adduser._id+'&petName='+(this.petName != this.adduser.nickname ? this.petName : "")
+					url: './form?id='+this.cardUser.id+'&petName='+(this.petName != this.cardUser.userInfo.nickname ? this.petName : "")
 				})
 			},
 			back: function() {
@@ -112,21 +105,22 @@
 				});
 			},
 			more: function(){
+				if(!this.isFriend){ return; }
 				uni.navigateTo({
-					url:'/pages/contact/more?id='+this.adduser._id+'&nickname='+this.$store.state.user.utils.getNickName(this.adduser._id,this.adduser.nickname)
+					url:'/pages/contact/more?id='+this.cardUser.id+'&nickname='+this.cardUser.userInfo.nickname
 				})
 			},
 			sendApply: function() {
 				try {
-					let message = this.webSocket.formatSendData({
-						type: 'addfriend',
-						data: '',
-						to_id: this.adduser._id, // 接收人/群 id
-						to_name: this.adduser.nickname, // 接收人/群 名称
-						to_avatar: this.adduser.avatar, // 接收人/群 头像
-						chat_type: 'user', // 接收类型
-					})
-					this.webSocket.send(message);
+					// let message = this.webSocket.formatSendData({
+					// 	type: 'addfriend',
+					// 	data: '',
+					// 	to_id: this.adduser._id, // 接收人/群 id
+					// 	to_name: this.adduser.nickname, // 接收人/群 名称
+					// 	to_avatar: this.adduser.avatar, // 接收人/群 头像
+					// 	chat_type: 'user', // 接收类型
+					// })
+					// this.webSocket.send(message);
 					uni.showToast({
 						title: '已发送申请',
 						duration: 3000

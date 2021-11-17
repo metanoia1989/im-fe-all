@@ -2,7 +2,7 @@ const Service = require('egg').Service;
 const crypto = require('crypto');
 
 class LoginService extends Service {
-  async create({ provider, username, password }) {
+  async create({ provider, username, password, nickname }) {
     const { ctx, config, service } = this;
     const user = await ctx.model.User.findOne({ where: { provider, username } });
     if (user) {
@@ -20,7 +20,7 @@ class LoginService extends Service {
         password: crypto.createHmac('sha256', secret).update(password).digest('hex')
       });
       const userInfo = await ctx.model.UserInfo.create({
-        nickname: username,
+        nickname,
         photo: `/public/images/head${Math.floor(Math.random() * 9 + 1)}.png`
       });
       const role = await ctx.model.Role.findOne({

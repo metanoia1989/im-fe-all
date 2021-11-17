@@ -112,10 +112,42 @@
 * [x] /pages/index/login 登录页面			
 * [x] /pages/index/regist 注册页面	
 * [x] /pages/tabbar/my 个人中心页	
-* [ ] /pages/user/user 个人信息页面 		
-* [ ] /pages/user/form 个人信息字段编辑	
+* [x] /pages/user/user 个人信息页面 		
+* [x] /pages/user/form 个人信息字段编辑	
 * [ ] /pages/tabbar/contact 好友列表页
 * [ ] /pages/group/createGroup 发起群聊页面		 	
 * [ ] /pages/contact/queryUsers 联系人添加好友页面 	
 * [ ] /pages/contact/groupList 群组列表页		
 * [ ] /pages/contact/applyList 好友申请页		
+
+今天来搞定剩下的这些页面	
+好友列表，需要获取：群组列表、好友列表、好友申请列表	
+不好弄，后端的架构我也不是很懂，自己构建新模块的能力的确很弱啊。
+
+尽量简化，减少心智负担，因为已有的逻辑太大，我不好动手和重构。
+
+用户协议 https://jibencaozuo.com/zh-Hans/bulletin/1 
+隐私政策 https://jibencaozuo.com/zh-Hans/bulletin/5 
+51Talk用户协议 https://sale.51talk.com/agree/app?product_type=user_agreement
+51Talk个人信息保护政策 https://sale.51talk.com/agree/version?v=20210810175320 
+
+uParse 富文本解析组件 https://ext.dcloud.net.cn/plugin?id=183 
+uni-app富文本渲染方案rich-text、uparse、v-html简单解析 https://www.cnblogs.com/huihuihero/p/12978903.html 
+
+
+tui.editor markdown 编辑组件
+codemirror 在线编辑器 
+我不是穷人，只是待富者。
+
+找个编程兼职看看，没那么多保障，但是最起码时间一点，而且是多劳多得。
+大公司要求太严格，中小工资搞的跟外包没啥区别，并且酬劳很低。
+自习完，把自己的简历包装一下，然后投递兼职的，主动过去联系。
+
+或者专门针对好点的公司，做面试准备。给人做兼职，也是一个不错的理由。
+起码要有个拿的出手的项目来说服人才行，这个聊天的一定要搞定。
+
+
+uni-app项目：在uni-popup弹框组件中引用uni-list 列表无法滑动 https://www.jianshu.com/p/6ec274e28cfc 
+后面直接把 uni-list-item 替换掉，自己来写个组件，解决这个问题。
+
+  

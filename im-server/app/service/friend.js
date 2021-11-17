@@ -59,12 +59,14 @@ class FriendService extends Service {
       userInfo = userInfo.get({
         plain: true
       });
+      userInfo.photo = ctx.helper.getFileUrl(userInfo.photo);
       user = user.get({
         plain: true
       });
       conversation = conversation.get({
         plain: true
       });
+      
       user.userInfo = userInfo;
       user.conversation = conversation;
       data.push(user);

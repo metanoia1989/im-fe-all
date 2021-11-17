@@ -41,28 +41,20 @@
 
 		<uni-popup ref="popup" type="bottom">
 			<view class="popup" :style="'padding-bottom:'+safeBottom+'rpx'">
-
-
 				<view class="delPanel">
 					<text class="deleted-text">将好友{{petName ? petName : nickname}}删除，并且删除该好友的聊天记录，同时在对方的好友列表将删除你</text>
 				</view>
-
 				<view class="delete">
 					<view class="button" @click="del()">
 						<text class="button-text">删除好友</text>
 					</view>
 				</view>
-
-				<view class="line">
-
-				</view>
-
+				<view class="line"></view>
 				<view class="delete">
 					<view class="button" @click="hidePopup()">
 						<text class="button-text" style="color: black;">取消</text>
 					</view>
 				</view>
-
 			</view>
 		</uni-popup>
 
@@ -70,9 +62,7 @@
 </template>
 
 <script>
-	import {
-		mapState
-	} from 'vuex'
+	import { mapGetters, mapMutations } from 'vuex'
 	import md5 from "@/common/md5.js"
 	export default {
 		data() {
@@ -88,18 +78,15 @@
 			}
 		},
 		computed: {
-			...mapState({
-				user: state => state.user.user,
-				webSocket: state => state.user.webSocket,
-			})
+      ...mapGetters('friend', ['cardUser', 'friendList']),
+      ...mapGetters('user', ['userInfo']),
 		},
 		onLoad() {
 			this.safeBottom = this.systemInfo.safeAreaInsets.bottom * 2;
-			var cardUser = uni.getStorageSync('cardUser');
-			this.uid = cardUser._id;
-			this.nickname = cardUser.nickname;
-			var petName = this.$store.state.user.utils.getNickName(cardUser._id,cardUser.nickname);
-			if(petName == cardUser.nickname){
+			this.uid = this.cardUser.id;
+			this.nickname = this.cardUser.nickname;
+			var petName = this.cardUser.userInfo.nickname;
+			if(petName == this.cardUser.nickname){
 				this.petName = "";
 			}else{
 				this.petName = petName;
@@ -107,6 +94,7 @@
 		},
 		methods: {
 			setNickName: function(){
+        return
 				uni.navigateTo({
 					url: './form?id='+this.uid+'&petName='+(this.petName != this.nickname ? this.petName : "")
 				})
@@ -118,49 +106,7 @@
 				this.$refs.popup.close()
 			},
 			del: function(){
-				var that = this;
-				uni.showLoading();
-				uniCloud.callFunction({
-					name: 'user',
-					data: {
-						$url: "deleteFriend",
-						token: this.$store.state.user.user_token,
-						data: {
-							user_id:this.user._id,
-							friend_id:this.uid
-						}
 
-					},
-				}).then((res) => {
-					uni.hideLoading();
-					uni.showModal({
-						title: '提示',
-						content: "删除成功"
-					});
-					that.$store.dispatch('getFriendIds')
-					let key = `chat_sessions_${this.user._id}`
-					var chat_sessions = uni.getStorageSync(key);
-					if(chat_sessions){
-						chat_sessions.forEach((item,index)=>{
-							if(item.id == this.uid){
-								chat_sessions.splice(index, 1);
-							}
-						})
-					}
-					uni.setStorageSync(key, chat_sessions);
-					let chatDetailKey = `chatDetail_${this.user._id}_${this.uid}`
-					uni.setStorageSync(chatDetailKey, []);
-					this.$store.dispatch('getSessionList')
-					uni.reLaunch({
-						url:"/pages/tabbar/session"
-					})
-				}).catch((err) => {
-					uni.hideLoading()
-					uni.showModal({
-						title: '提示',
-						content: err
-					});
-				})
 			},
 			back: function(){
 				uni.navigateBack({

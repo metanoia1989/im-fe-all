@@ -2,18 +2,15 @@
 	<view class="" v-if="user">
 		<view class="nvue-page-head" ref="pagehead" id="pagehead">
 			<view class="navbar" ref="navbar">
-				<!--  #ifndef  MP-WEIXIN -->
-				<uni-nav-bar :fixed="true" :status-bar="true" @clickRight="showMenu" :loading="!loadFinish"
-				 :rightIconBool="true" right-icon="plus" :title="loadFinish ? '聊天' : '加载中'"></uni-nav-bar>
-				<!--  #endif -->
-				<!--  #ifdef  MP-WEIXIN -->
-				<uni-nav-bar :fixed="true" :leftIconBool="true" left-icon="plus" :status-bar="true" @clickLeft="showMenu" :loading="!loadFinish"
-				 :rightIconBool="true" :title="loadFinish ? '聊天' : '加载中'"></uni-nav-bar>
-				<!--  #endif -->
-			</view>
-			<view class="navbar" ref="searchbar">
-				<uni-search-bar class="navbar" @input="" :searchTranslateX="searchTranslateX"
-				 :radius="6" placeholder="搜索" @confirm="search" bgColor="white" @searchBarClick="searchBarClick" @cancel="searchBarCancel"></uni-search-bar>
+				<uni-nav-bar
+          :fixed="true"
+          :status-bar="true"
+          @clickRight="showMenu"
+          :loading="!loadFinish"
+          :rightIconBool="true"
+          right-icon="plus"
+          :title="loadFinish ? '聊天' : '加载中'">
+        </uni-nav-bar>
 			</view>
 		</view>
 		<uni-list :border="false" v-if="!showSearch" :style="{'margin-bottom':tabbarHeight+'rpx'}">
@@ -51,30 +48,6 @@
 			<!--  #endif -->
 		</uni-list>
 
-		<view v-if="showSearch" class="nvue-page-search" ref="searchpanel" :style="'height: '+ searchBoxH +'rpx;background-color:#ededed;'">
-			<view class="search-label" v-if="friendSearchResult.length">
-				<text class="search-label-text">好友</text>
-			</view>
-			<uni-list :border="false" v-if="friendSearchResult.length">
-				<cell v-for="(item,index) in friendSearchResult">
-					<uni-list-chat :arrayIndex="index" :border="true" :title="$store.state.user.utils.getNickName(item._id,item.nickname)"
-					 :avatar="$store.state.user.utils.getImageCache(item.avatar)" :clickable="true" badge-positon="left" @click="chatWindow(item._id,item.nickname)">
-
-					</uni-list-chat>
-				</cell>
-			</uni-list>
-			<view class="search-label" v-if="groupSearchResult.length">
-				<text class="search-label-text">群聊</text>
-			</view>
-			<uni-list :border="false" v-if="groupSearchResult.length">
-				<cell v-for="(item,index) in groupSearchResult">
-					<uni-list-chat :arrayIndex="index" :avatarWidth="80" :border="true" :title="item.title" :group-id="item._id"
-					 :clickable="true" badge-positon="left" @click="chatGroupWindow(item._id,item.title)">
-
-					</uni-list-chat>
-				</cell>
-			</uni-list>
-		</view>
 		<view class="dropdown" v-if="menu">
 			<uni-list class="dropdown-list" :border="false" background="#4c4c4c" borderRadius="10">
 				<uni-list-item @click="createGroup" :disabled="true" :style="dropdownlist" :show-extra-icon="true" :extra-icon="extraIconChat" title="发起群聊" :border="false" :showArrow="false" :textStyle="'color: white;'"></uni-list-item>
@@ -84,6 +57,7 @@
 				 :extra-icon="extraIconScan" title="扫一扫" :showArrow="false" :textStyle="'color: white;'"></uni-list-item>
 			</uni-list>
 		</view>
+
 	</view>
 </template>
 <script>
@@ -207,32 +181,11 @@
 					url: '/pages/chat/chat?type=groupchat&id=' + sessionId + "&name=" + name,
 				})
 			},
-			search: function(e) {
-				console.log(e)
-			},
 			showMenu: function() {
 				if (!this.menu) {
 					this.menu = true;
 				} else {
 					this.menu = false;
-				}
-			},
-			swipeClick: function(e, index) {
-				if (e.index === 1) {
-					try {
-						let key = `chat_sessions_${this.user._id}`
-						var chat_sessions = uni.getStorageSync(key);
-						var toId = chat_sessions[index].id;
-						chat_sessions.splice(index, 1);
-						let chatDetailKey = `chatDetail_${this.user._id}_${toId}`
-						uni.setStorageSync(chatDetailKey, []);
-						uni.setStorageSync(key, chat_sessions);
-						this.$store.dispatch('getSessionList')
-					} catch (e) {
-						console.log(e)
-					}
-				} else if (e.index === 0) {
-
 				}
 			},
 			queryUsers: function() {
@@ -282,29 +235,6 @@
 					});
 				})
 			},
-			async preloadPage() {
-				try {
-					uni.preloadPage({
-						url: "/pages/tabbar/contact"
-					});
-					uni.preloadPage({
-						url: "/pages/tabbar/my"
-					});
-					this.sessionList.forEach((item) => {
-						if (item.chat_type == "user") {
-							uni.preloadPage({
-								url: '/pages/chat/chat?id=' + item.id + "&name=" + item.name
-							});
-						} else {
-							uni.preloadPage({
-								url: '/pages/group/chatGroup?id=' + item.id
-							});
-						}
-					})
-				} catch (e) {
-
-				}
-			}
 		}
 	}
 </script>

@@ -118,6 +118,7 @@
 	.header {
 		background-color: #29c160;
 		margin-bottom: 20rpx;
+    margin-top: -1rpx;
 	}
 
 	.userinfo {

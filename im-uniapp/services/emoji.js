@@ -1,4 +1,4 @@
-const emoji = {
+const emojiService = {
   emojis: [
     {
       key: '[中毒]',
@@ -156,4 +156,4 @@ const emoji = {
   }
 };
 
-export default emoji;
+export default emojiService;

@@ -43,7 +43,7 @@ export default {
     if (
       !this.message.isMyself &&
       this.activeConversation.type === 'groupchat' &&
-      !this.userInfoList.some(item => item.userId === this.message.fromId)
+      !this.friendList.some(item => item.userId === this.message.fromId)
     ) {
       this.getUserInfo();
     }
@@ -52,7 +52,7 @@ export default {
   },
   computed: {
     ...mapGetters('user', ['userInfo']),
-    ...mapGetters('im', ['activeConversation', 'userInfoList']),
+    ...mapGetters('im', ['activeConversation', 'friendList']),
     textMessage() {
       if (this.message.body.type === 'text') {
         return emoji.transform(this.message.body.msg);
@@ -69,7 +69,7 @@ export default {
       if (this.activeConversation.type === 'chat') {
         return this.activeConversation.info;
       }
-      return this.userInfoList.find(item => item.userId === this.message.fromId) || { name: '' };
+      return this.friendList.find(item => item.userId === this.message.fromId) || { name: '' };
     },
     itemStyle() {
       return {

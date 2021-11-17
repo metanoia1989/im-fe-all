@@ -3,7 +3,7 @@ import robotHead from '@/static/images/robot.png';
 const state = {
   conversationList: [],
   loadFinish: false,
-  userInfoList: [
+  friendList: [
     {
       userId: 'robot',
       photo: robotHead,
@@ -21,8 +21,8 @@ const getters = {
   activeConversation(state) {
     return state.conversationList.find(item => item.isActive === true);
   },
-  userInfoList(state) {
-    return state.userInfoList;
+  friendList(state) {
+    return state.friendList;
   }
 };
 
@@ -94,8 +94,8 @@ const mutations = {
     }
   },
   addUserInfo(state, userInfo) {
-    if (!state.userInfoList.some(item => item.userId === userInfo.userId)) {
-      state.userInfoList.push(userInfo);
+    if (!state.friendList.some(item => item.userId === userInfo.userId)) {
+      state.friendList.push(userInfo);
     }
   },
   increaseConversationPageNumber(state, { conversationId }) {

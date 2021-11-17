@@ -2,11 +2,11 @@
 import login from './login';
 import restful from './restful';
 import add from './add';
-import mailList from './mail-list';
+import friend from './friend';
 
 export default {
   login,
   restful,
   add,
-  mailList
+  friend
 };

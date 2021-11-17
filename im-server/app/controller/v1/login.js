@@ -4,11 +4,12 @@ class LoginController extends Controller {
   async signup() {
     const { service, ctx } = this;
 
-    const { username, password } = ctx.request.body;
+    const { username, password, nickname } = ctx.request.body;
 
     const params = {
       provider: 'local',
       username,
+      nickname,
       password
     };
 
@@ -16,13 +17,15 @@ class LoginController extends Controller {
     try {
       const createRule = {
         username: { type: 'string', min: 4 },
+        nickname: { type: 'string', min: 2 },
         password: { type: 'string', min: 6 }
       };
       ctx.validate(createRule, params);
     } catch (error) {
       ctx.body = {
         statusCode: '1',
-        errorMessage: '参数校验失败'
+        errorMessage: '参数校验失败',
+        error
       };
       return;
     }
